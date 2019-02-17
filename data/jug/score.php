@@ -35,11 +35,11 @@ try {
     $ans = $db->query("SELECT `pid` FROM `content` WHERE `cid`={$cid}");
     $res = $ans->fetch_row();
     $pid = (int)$res[0];
-    $ans = $db->query("SELECT `qid`,`max`,`min` FROM `question` WHERE `pid`={$pid} AND `pqid`={$pqid}");
+    $ans = $db->query("SELECT `qid`,`max` FROM `question` WHERE `pid`={$pid} AND `pqid`={$pqid}");
     if ($ans->num_rows === 0)
         throw new KBException(-100);
     $res = $ans->fetch_row();
-    if ($score > (int)$res[1] || $score < (int)$res[2])
+    if ($score > (int)$res[1])
         throw new KBException(-100);
     //计入分数
     $db->query(
