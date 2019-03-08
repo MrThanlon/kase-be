@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 2019-02-17 17:16:21
+-- Generation Time: 2019-03-08 14:54:56
 -- 服务器版本： 10.0.34-MariaDB-0ubuntu0.16.04.1
 -- PHP Version: 7.0.32-0ubuntu0.16.04.1
 
@@ -101,6 +101,7 @@ CREATE TABLE `project` (
   `pid` bigint(20) UNSIGNED NOT NULL,
   `name` text NOT NULL,
   `contents` bigint(20) NOT NULL DEFAULT '0',
+  `passed` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
   `groups` bigint(20) NOT NULL DEFAULT '0',
   `total` bigint(20) UNSIGNED NOT NULL,
   `total_only` int(10) UNSIGNED NOT NULL,
@@ -152,6 +153,20 @@ CREATE TABLE `stdlog` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `token`
+--
+
+CREATE TABLE `token` (
+  `tid` bigint(20) UNSIGNED NOT NULL,
+  `username` bigint(20) UNSIGNED NOT NULL,
+  `token` char(65) NOT NULL,
+  `expire` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `valid` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `user`
 --
 
@@ -160,9 +175,10 @@ CREATE TABLE `user` (
   `username` char(20) NOT NULL,
   `type` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `tel` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
-  `password` char(65) NOT NULL,
+  `password` char(65) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT NULL,
   `last_login` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `version` bigint(20) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -174,7 +190,8 @@ CREATE TABLE `user` (
 CREATE TABLE `user-group` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `uid` bigint(20) UNSIGNED NOT NULL,
-  `gid` bigint(20) UNSIGNED NOT NULL
+  `gid` bigint(20) UNSIGNED NOT NULL,
+  `pid` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -260,6 +277,14 @@ ALTER TABLE `stdlog`
   ADD PRIMARY KEY (`time`);
 
 --
+-- Indexes for table `token`
+--
+ALTER TABLE `token`
+  ADD PRIMARY KEY (`tid`),
+  ADD UNIQUE KEY `tid` (`tid`),
+  ADD KEY `username` (`username`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -330,7 +355,13 @@ ALTER TABLE `question`
 -- 使用表AUTO_INCREMENT `score`
 --
 ALTER TABLE `score`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- 使用表AUTO_INCREMENT `token`
+--
+ALTER TABLE `token`
+  MODIFY `tid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `user`

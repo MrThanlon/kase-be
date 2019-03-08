@@ -8,22 +8,12 @@
  * 部分与download_empty_table重合
  */
 
-require_once '../../include/jwt.php';
-require_once '../../vendor/autoload.php';
+require_once __DIR__ . '/../../include/jwt.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../include/letter_sheet.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
-
-define('LETTER_SHEET', ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']);
-/**
- * @param int $cols
- * @return string
- * 支持到两位字母
- */
-function getLetter(int $cols)
-{
-    return LETTER_SHEET[$cols / 26] . LETTER_SHEET[$cols % 26];
-}
 
 try {
     if ($_SERVER['REQUEST_METHOD'] !== 'GET')
@@ -107,8 +97,8 @@ try {
     $excel->getActiveSheet()->setCellValue('A2', "序号");
     $excel->getActiveSheet()->setCellValue('B2', "课题名称");
     $total_only ?
-        $excel->getActiveSheet()->setCellValue("{$letter}2", "合计总分\n（可只打总分）") :
-        $excel->getActiveSheet()->setCellValue("{$letter}2", "合计总分\n（不可只打总分）");
+        $excel->getActiveSheet()->setCellValue("{$letter}2", "合计总分\r（可只打总分）") :
+        $excel->getActiveSheet()->setCellValue("{$letter}2", "合计总分\r（不可只打总分）");
     //填充序号、课题、超链接以及分数合计公式
     $rletter = getLetter($num_cols - 1); //右侧倒数第二个字母
     foreach ($contents as $key => $val) {

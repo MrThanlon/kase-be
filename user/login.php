@@ -42,7 +42,7 @@ try {
             "SELECT `password`,`type`,`uid`,`version` FROM `user` WHERE `username` = '{$u}' LIMIT 1");
         if ($ans->num_rows === 0)
             throw new KBException(-1);
-        $res = $ans->fetch_row();
+        $res = $ans->fetch_all()[0];
         if ($res[0] !== hash('sha256', $_POST['p'] . HASH_SALT))
             throw new KBException(-1);
         //登录成功

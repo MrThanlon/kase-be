@@ -1,6 +1,7 @@
 {
     "require": {
     	"ext-json": "*",
+        "ext-mysqli": "*",
         "smalot/pdfparser": "^0.14.0",
         "phpoffice/phpspreadsheet": "^1.6",
         "qcloudsms/qcloudsms_php": "^0.1.4",

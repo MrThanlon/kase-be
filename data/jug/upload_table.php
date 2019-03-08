@@ -9,6 +9,7 @@
 
 require_once __DIR__ . '/../../include/jwt.php';
 require_once __DIR__ . '/../../include/letter_sheet.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 try {
     header('Content-type: application/json');
@@ -45,14 +46,14 @@ try {
         $val = $val[0];
     }
     $ans = $db->query(
-        "SELECT `gid` FROM `user-group` WHERE `uid`={$uid} AND `gid` IN (" .
+        "SELECT `gid` FROM `user-group` WHERE `uid`={$jwt['uid']} AND `gid` IN (" .
         implode(',', $gids) . ")");
     $gids = $ans->fetch_all();
     foreach ($gids as &$val) {
         $val = $val[0];
     }
     //拉取question
-    $ans = $db->query("SELECT `name`,`comment`,`qid` FROM `question` WHERE `pid`={$pid} ORDER BY `pqid`");
+    $ans = $db->query("SELECT `name`,`comment`,`qid`,`max`,`pqid` FROM `question` WHERE `pid`={$pid} ORDER BY `pqid`");
     $num_question = $ans->num_rows;
     $questions = $ans->fetch_all();
     //拉取材料
@@ -75,37 +76,45 @@ try {
      * - 材料名称和cid（B4:B($num_contents+3))
      */
     //检测文件格式
-    $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($_FILES['file']['tmp_name']);
-    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+    $inputFileType = PhpOffice\PhpSpreadsheet\IOFactory::identify($_FILES['file']['tmp_name']);
+    $reader = PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
     //读取表格
     $table = $reader->load($_FILES['file']['tmp_name']);
     //检测标题
-    if ($name !== $table->getActiveSheet()->getCell('A1'))
+    if ($name !== $table->getActiveSheet()->getCell('A1')->getValue())
         throw new KBException(-115);
     //检测是否可只打总分
     if ($total_only) {
-        if ($table->getActiveSheet()->getCell(getLetter($num_question + 4) . '2') !== "合计总分\n（可只打总分）")
+        if ($table->getActiveSheet()
+                ->getCell(getLetter($num_question + 3) . '2')
+                ->getValue() !== "合计总分\n（可只打总分）")
             throw new KBException(-115);
     } else {
-        if ($table->getActiveSheet()->getCell(getLetter($num_question + 4) . '2') !== "合计总分\n（可只打总分）")
+        if ($table->getActiveSheet()
+                ->getCell(getLetter($num_question + 3) . '2')
+                ->getValue() !== "合计总分\n（可只打总分）")
             throw new KBException(-115);
     }
     //检测题目（严格，题目顺序必须按pqid排列），从C2/C3往左
     foreach ($questions as $key => $val) {
         $l = getLetter($key + 3);
-        if ($table->getActiveSheet()->getCell("{$l}2") !== $val[0] ||
-            $table->getActiveSheet()->getCell("{$l}3") !== $val[1])
+        if ($table->getActiveSheet()->getCell("{$l}2")->getValue() !== "{$val[0]}（{$val[3]}分）" ||
+            $table->getActiveSheet()->getCell("{$l}3")->getValue() !== $val[1])
             throw new KBException(-115);
     }
     //检测cid（严格，材料顺序必须按cid顺序排列），从B4往下
     foreach ($contents as $key => $val) {
-        if ($table->getActiveSheet()->getCell('B' . ($key + 4)) !== $val[1])
+        if ($table->getActiveSheet()->getCell('B' . ($key + 4))->getValue() !== $val[1])
             throw new KBException(-115);
         //检测超链接
-        if ($table->getActiveSheet()->getCell('B' . ($key + 4))->getHyperlink() !==
+        if ($table->getActiveSheet()
+                ->getCell('B' . ($key + 4))
+                ->getHyperlink()
+                ->getUrl() !==
             'https://' . DOMAIN . PATH . '#cid=' . $val[0])
             throw new KBException(-115);
     }
+    //检测完成
     //拉取分数，C4:
     //key1=cid,key2=pqid,val=score
     $scores = [];
@@ -115,9 +124,9 @@ try {
     $scores_total_only = [];
     //只打总分的情况
     if ($total_only) {
-        $l = getLetter($num_question + 4);
+        $l = getLetter($num_question + 3);
         foreach ($contents as $key => $val) {
-            $s = $table->getActiveSheet()->getCell("{$l}4");
+            $s = $table->getActiveSheet()->getCell("{$l}4")->getValue();
             if (!is_numeric($s))
                 continue;
             $s = (int)$s;
@@ -138,16 +147,16 @@ try {
             //对于既打总分又打各项的以总分为准，跳过
             if ($scores_total_only[(int)$val[0]] !== null)
                 continue;
-            $s = $table->getActiveSheet()->getCell($l . ($key + 4));
+            $s = $table->getActiveSheet()->getCell($l . ($key + 4))->getValue();
             //空值
             if ($s === '')
                 continue;
             if (!is_numeric($s))
                 throw new KBException(-115);
             //计入
-            $scores[$val[0]][$i + 1] = (int)$s;
+            $scores[$val[0]][$i + 1] = $s;
             //合成语句
-            $scores_sql[] = "({$val[0]},{$jwt['uid']},{$questions[$i+1][2]},{$i}+1,{$s})";
+            $scores_sql[] = "({$val[0]},{$jwt['uid']},{$questions[$i][2]},{$questions[$i][4]},{$s})";
         }
     }
     //合成sql语句，插入数据库
