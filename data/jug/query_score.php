@@ -33,7 +33,7 @@ try {
     $ans = $db->query("SELECT 1 FROM `question` WHERE `pid`={$pid} AND `pqid`={$pqid}");
     if ($ans->num_rows === 0)
         throw new KBException(-100);
-    //pqid存在，查询分数
+    //pqid存在，查询最终分数
     $score = 0;
     $ans = $db->query(
         "SELECT `score` FROM `score` WHERE `uid`={$jwt['uid']} AND `cid`={$cid} AND `pqid`= ORDER BY `id` DESC LIMIT 1");

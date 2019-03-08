@@ -7,7 +7,7 @@
  * 日志函数相关
  */
 
-require 'db.php';
+require_once __DIR__ . '/db.php';
 
 /**
  * @param string $msg

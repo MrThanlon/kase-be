@@ -4,7 +4,7 @@
  * ©hzy
  */
 
-require 'exception.php';
+require_once __DIR__ . '/exception.php';
 /**
  * @param string
  * @author hzy
@@ -40,8 +40,17 @@ function jwt_decode(string $token)
     if ($token === false)
         throw new KBException(-10);
     $token_arr = json_decode($token, true);
-    if ($token_arr == null)
+    if ($token_arr === null)
         throw new KBException(-10);
+    //验证version
+    global $db;
+    $ans = $db->query("SELECT `version` FROM `user` WHERE `uid`={$token_arr['uid']}");
+    if ($ans->num_rows === 0)
+        throw new KBException(-10);
+    $res = $ans->fetch_row();
+    if ($token_arr['version'] < (int)$res[0])
+        throw new KBException(-10);
+    //验证时间
     if (time() >= $token_arr['expire'])
         throw new KBException(-10);
     return $token_arr;

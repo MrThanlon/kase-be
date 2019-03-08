@@ -1,6 +1,15 @@
 {
     "require": {
+    	"ext-json": "*",
         "smalot/pdfparser": "^0.14.0",
-        "phpoffice/phpspreadsheet": "^1.6"
+        "phpoffice/phpspreadsheet": "^1.6",
+        "qcloudsms/qcloudsms_php": "^0.1.4",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.laravel-china.org"
+        }
     }
 }

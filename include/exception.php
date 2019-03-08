@@ -2,7 +2,7 @@
 /**
  * 错误处理
  */
-require 'log.php';
+require_once __DIR__ . '/log.php';
 
 class KBException extends Exception
 {
@@ -29,6 +29,7 @@ class KBException extends Exception
         -112 => 'Wrong gid',
         -113 => 'score is too high',
         -114 => 'Wrong qid',
+        -115 => 'Unacceptable table',
         -200 => 'Unknow error'
     ];
 

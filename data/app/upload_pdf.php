@@ -28,7 +28,7 @@ try {
     if (!key_exists('pdf', $_FILES))
         //没有文件上传个毛
         throw new KBException(-100);
-    if (!preg_match('/.pdf$/', $_FILES['pdf']['name']))
+    if (!preg_match('/\.pdf$/iD', $_FILES['pdf']['name']))
         //文件名不规范
         throw new KBException(-50);
     foreach (['/', '\\', ':', '*', '"', '<', '>', '|', '?'] as $val) {

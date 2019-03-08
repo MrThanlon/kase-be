@@ -7,23 +7,15 @@
  * 下载空的打分表
  */
 
+require_once __DIR__ . '/../../include/jwt.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../include/letter_sheet.php';
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
-define('LETTER_SHEET', ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']);
-/**
- * @param int $cols
- * @return string
- */
-function getLetter(int $cols)
-{
-    return LETTER_SHEET[$cols / 26] . LETTER_SHEET[$cols % 26];
-}
 
 try {
-    require_once '../../include/jwt.php';
-    require_once '../../vendor/autoload.php';
-
     if ($_SERVER['REQUEST_METHOD'] !== 'GET')
         //bad request
         throw new KBException(-100);
@@ -47,7 +39,7 @@ try {
     $num_question = $ans->num_rows;
     $questions = $ans->fetch_all();
     //拉取contents
-    $ans = $db->query("SELECT `cid`,`name` FROM `content` WHERE `pid`={$pid}");
+    $ans = $db->query("SELECT `name`,`cid` FROM `content` WHERE `pid`={$pid} ORDER BY `cid`");
     $num_content = $ans->num_rows;
     $contents = $ans->fetch_all();
     //生成表格
@@ -66,7 +58,6 @@ try {
     //合并单元格处理
     //计算总列数
     $num_cols = $num_question + 3;
-
     //进制转换
     $letter = getLetter($num_cols);
     //其他的合并
@@ -75,6 +66,11 @@ try {
     $excel->getActiveSheet()->mergeCells('B2:B3');
     $excel->getActiveSheet()->mergeCells("{$letter}2:{$letter}3");
     //设置指定单元格数据
+    /**
+     * A1.项目标题
+     * A2."序号"
+     * A3."课题名称"
+     */
     $excel->getActiveSheet()->setCellValue('A1', $name);
     $excel->getActiveSheet()->setCellValue('A2', "序号");
     $excel->getActiveSheet()->setCellValue('B2', "课题名称");
@@ -82,14 +78,25 @@ try {
         $excel->getActiveSheet()->setCellValue("{$letter}2", "合计总分\n（可只打总分）");
     else
         $excel->getActiveSheet()->setCellValue("{$letter}2", "合计总分\n（不可只打总分）");
-    //填充序号和课题
+    //填充序号、课题以及分数合计公式
+    $rletter = getLetter($num_cols - 1); //右侧倒数第二个字母
     foreach ($contents as $key => $val) {
-        $excel->getActiveSheet()->setCellValue('A' . ($key + 3), $key + 3);
-        $excel->getActiveSheet()->setCellValue('B' . ($key + 3), $val[1]);
+        $current_row = $key + 4;
+        $excel->getActiveSheet()->setCellValue('A' . $current_row, $key + 1); //序号
+        $excel->getActiveSheet()->setCellValue('B' . $current_row, $val[0]); //课题
+        //超链接，不确定，可能要修改
+        $excel->getActiveSheet()
+            ->getCell('B' . $current_row)
+            ->getHyperlink()
+            ->setUrl('https://' . DOMAIN . PATH . '#cid=' . $val[1]);
+        //公式
+        $excel->getActiveSheet()->setCellValue(
+            $letter . $current_row, "=SUM(C{$current_row}:{$rletter}{$current_row})"
+        );
     }
     //填充题目
     foreach ($questions as $key => $val) {
-        $l = getLetter($key + 2);
+        $l = getLetter($key + 3);
         $excel->getActiveSheet()->setCellValue("{$l}2", "{$val[0]}（{$val[3]}分）");
         $excel->getActiveSheet()->setCellValue("{$l}3", $val[1]);
     }

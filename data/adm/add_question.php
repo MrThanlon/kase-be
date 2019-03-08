@@ -35,6 +35,7 @@ try {
     //检查分值是否超过total
     $ans = $db->query("SELECT `max` FROM `question` WHERE `pid`={$pid}");
     $current = 0;
+    //pqid需要从1开始，0表示只打总分
     $pqid = $ans->num_rows + 1;
     $res = $ans->fetch_all();
     foreach ($res as $val) {

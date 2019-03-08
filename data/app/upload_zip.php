@@ -25,7 +25,7 @@ try {
     if (!key_exists('zip', $_FILES))
         //没有文件上传个毛
         throw new KBException(-100);
-    if (!preg_match('/.zip$/', $_FILES['zip']['name']))
+    if (!preg_match('/\.zip$/iD', $_FILES['zip']['name']))
         //文件名不规范
         throw new KBException(-50);
     foreach (['/', '\\', ':', '*', '"', '<', '>', '|', '?'] as $val) {

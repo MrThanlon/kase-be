@@ -7,9 +7,9 @@
  * 登录API
  */
 
+require_once __DIR__ . '/../include/jwt.php';
 try {
     header('Content-type: application/json');
-    require '../include/jwt.php';
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
         //bad request
         throw new KBException(-100);
@@ -19,17 +19,18 @@ try {
         //手机号登录，申请人模式，使用tel字段查找
         $u = $db->escape_string($_POST['u']);
         $ans = $db->query(
-            "SELECT `password`,`username`,`type`,`uid` FROM `user` WHERE `tel` = {$u} LIMIT 1");
+            "SELECT `password`,`username`,`type`,`uid`,`version` FROM `user` WHERE `tel` = {$u} LIMIT 1");
         if ($ans->num_rows === 0)
             throw new KBException(-1);
         $res = $ans->fetch_row();
+        //验证密码
         if ($res[0] !== hash('sha256', $_POST['p'] . HASH_SALT))
             throw new KBException(-1);
         //登录成功
         //更新登录日期
         $db->query("UPDATE `user` SET `last_login`=CURRENT_TIMESTAMP WHERE `user`.`uid` = {$res[3]}");
         //生成token
-        $jwt = ['u' => $res[1], 'uid' => (int)$res[3], 'type' => (int)$res[2],
+        $jwt = ['u' => $res[1], 'uid' => (int)$res[3], 'type' => (int)$res[2], 'version' => (int)$res[4],
             'born' => time(), 'expire' => time() + COOKIE_EXPIRE];
         setcookie('token', jwt_encode($jwt), time() + COOKIE_EXPIRE,
             '/', DOMAIN, false, false);
@@ -38,7 +39,7 @@ try {
         //其他人登录，使用username字段来查找
         $u = $db->escape_string($_POST['u']);
         $ans = $db->query(
-            "SELECT `password`,`type`,`uid` FROM `user` WHERE `username` = '{$u}' LIMIT 1");
+            "SELECT `password`,`type`,`uid`,`version` FROM `user` WHERE `username` = '{$u}' LIMIT 1");
         if ($ans->num_rows === 0)
             throw new KBException(-1);
         $res = $ans->fetch_row();
@@ -48,10 +49,9 @@ try {
         //更新登录日期
         $db->query("UPDATE `user` SET `last_login`=CURRENT_TIMESTAMP WHERE `user`.`uid` = {$res[2]}");
         //生成token
-        $jwt = ['u' => $_POST['u'], 'uid' => (int)$res[2], 'type' => (int)$res[1],
-            'born' => time(), 'expire' => time() + 2592000];
-        setcookie('token', jwt_encode($jwt), time() + 2592000,
-            '/', DOMAIN, false, false);
+        $jwt = ['u' => $_POST['u'], 'uid' => (int)$res[2], 'type' => (int)$res[1], 'version' => (int)$res[3],
+            'born' => time(), 'expire' => time() + EXPIRE];
+        setcookie('token', jwt_encode($jwt), time() + EXPIRE, PATH, DOMAIN);
         echo json_encode(['status' => 0, 'msg' => '']);
     }
 

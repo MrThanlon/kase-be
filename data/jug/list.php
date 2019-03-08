@@ -8,9 +8,9 @@
  * 首先从user-group表中读取对应gid，然后读取所有cid
  */
 
+require_once __DIR__ . '/../include/jwt.php';
 try {
     header('Content-type: application/json');
-    require '../../include/jwt.php';
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
         //bad request
         throw new KBException(-100);
