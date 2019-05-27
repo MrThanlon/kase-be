@@ -10,6 +10,7 @@
 try {
     require_once __DIR__ . '/../include/jwt.php';
     header('Content-type: application/json');
+    header('Access-Control-Allow-Origin: ' . CORS);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
         //bad request
         throw new KBException(-100);
