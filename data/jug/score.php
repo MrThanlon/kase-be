@@ -47,11 +47,11 @@ try {
     if ($db->sqlstate !== '00000')//插入失败
         throw new KBException(-60);
     echo json_encode([
-        'status_code' => 0,
+        'status' => 0,
         'msg' => ''
     ]);
 } catch (KBException $e) {
-    echo json_encode(['status_code' => $e->getCode(), 'msg' => $e->getMessage()]);
+    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
 } catch (Exception $e) {
-    echo json_encode(['status_code' => -200, 'msg' => 'Unknow error']);
+    echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
 }

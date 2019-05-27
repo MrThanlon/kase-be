@@ -43,7 +43,7 @@ try {
     if ($ans->num_rows === 0)
         throw new KBException(-103);
     $res = $ans->fetch_row();
-    if ($res[0] !== '')
+    if ($res[0] !== null)
         throw new KBException(-100);
     //检查pdf文件是否正常
     try {
@@ -64,12 +64,12 @@ try {
     if (!move_uploaded_file($_FILES['pdf']['tmp_name'], FILE_DIR . "/{$cid}p"))
         throw new KBException(-106);
     echo json_encode([
-        'status_code' => 0,
+        'status' => 0,
         'msg' => ''
     ]);
 
 } catch (KBException $e) {
-    echo json_encode(['status_code' => $e->getCode(), 'msg' => $e->getMessage()]);
+    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
 } catch (Exception $e) {
-    echo json_encode(['status_code' => -200, 'msg' => 'Unknow error']);
+    echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
 }

@@ -94,7 +94,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 ```json
 {
-	status_code: Number,
+	status: Number,
 	msg: String
 }
 ```
@@ -119,7 +119,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 ```json
 {
-	status_code: Number,
+	status: Number,
 	msg: String
 }
 ```
@@ -135,7 +135,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     URL: "user/one_time_login",
     method: "POST",
     param: {
-        u: Number, //手机号
+      u: Number, //手机号
     	token: String
     }
 }
@@ -152,7 +152,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 ### 用户身份
 
-这个其实不是很有必要，直接解析cookie里面的内容就可以的。
+这个其实不是很有必要，直接解析cookie里面的内容也可以的，理论上仅用于跨域的情况。
 
 @request
 
@@ -186,6 +186,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     URL: "user/reset_password",
     method: "POST",
     param: {
+      	op: String, //原密码
         p: String //新密码
     }
 }
@@ -438,7 +439,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     method: "POST",
     param: {
         cid: Number, //申请材料的编号
-    	zip: File //文件
+    		zip: File //文件
     }
 }
 ```
@@ -539,7 +540,9 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
         	cid: Number, //申报材料唯一编号
         	applicant: String, //申请人
             status: Number,
-            pid: Number //所属项目
+            pid: Number, //所属项目
+          pdf: Boolean, //是否上传PDF
+          zip: Boolean //是否上传附件
         },
         ...
     ]

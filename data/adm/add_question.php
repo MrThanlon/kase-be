@@ -47,10 +47,10 @@ try {
     $db->query("INSERT INTO `question` (`name`,`comment`,`pqid`,`max`,`pid`) VALUES ('{$name}','{$comment}',{$pqid},{$max},{$pid})");
     if ($db->sqlstate !== '00000')
         throw new KBException(-60);
-    echo json_encode(['status_code' => 0, 'msg' => '', 'qid' => $db->insert_id, 'pqid' => $pqid]);
+    echo json_encode(['status' => 0, 'msg' => '', 'qid' => $db->insert_id, 'pqid' => $pqid]);
 
 } catch (KBException $e) {
-    echo json_encode(['status_code' => $e->getCode(), 'msg' => $e->getMessage()]);
+    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
 } catch (Exception $e) {
-    echo json_encode(['status_code' => -200, 'msg' => 'Unknow error']);
+    echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
 }

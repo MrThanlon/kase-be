@@ -5,6 +5,12 @@
  */
 
 require_once __DIR__ . '/exception.php';
+
+if (CORS) {
+    header('Access-Control-Allow-Origin: ' . CORS);
+    header('Access-Control-Allow-Credentials: true');
+}
+
 /**
  * @param string
  * @author hzy

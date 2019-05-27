@@ -47,13 +47,13 @@ try {
     //更新
     $db->query("UPDATE `project` SET `contents`=`contents`+1 WHERE `pid`={$_POST['pid']} LIMIT 1");
     echo json_encode([
-        'status_code' => 0,
+        'status' => 0,
         'msg' => '',
         'cid' => $db->insert_id
     ]);
 
 } catch (KBException $e) {
-    echo json_encode(['status_code' => $e->getCode(), 'msg' => $e->getMessage()]);
+    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
 } catch (Exception $e) {
-    echo json_encode(['status_code' => -200, 'msg' => 'Unknow error']);
+    echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
 }

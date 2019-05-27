@@ -7,15 +7,25 @@
  * 重设密码
  */
 
-require_once __DIR__ . '../include/jwt.php';
+require_once __DIR__ . '/../include/jwt.php';
 try {
     header('Content-type: application/json');
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !key_exists('p', $_POST))
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !key_exists('p', $_POST) || !key_exists('op', $_POST))
         //bad request
         throw new KBException(-100);
     if (!key_exists('token', $_COOKIE))
         throw new KBException(-10);
     $jwt = jwt_decode($_COOKIE['token']);
+    $op = hash('sha256', $_POST['op'] . HASH_SALT);
+    //检测原密码
+    $ans = $db->query("SELECT `password` FROM `user` WHERE `uid`={$jwt['uid']}");
+    if ($ans->num_rows === 0)
+        throw new KBException(-200);
+    $res = $ans->fetch_row();
+    if ($res[0] !== $op) {
+        throw new KBException(-1);
+    }
+
     $p = hash('sha256', $_POST['p'] . HASH_SALT);
     //新用户更新type
     $jwt['type'] === 0 ?
@@ -29,7 +39,7 @@ try {
     echo json_encode(['status' => 0, 'msg' => '']);
 
 } catch (KBException $e) {
-    echo json_encode(['status_code' => $e->getCode(), 'msg' => $e->getMessage()]);
+    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
 } catch (Exception $e) {
-    echo json_encode(['status_code' => -200, 'msg' => 'Unknow error']);
+    echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
 }

@@ -28,13 +28,13 @@ try {
         $data[] = $d;
     }
     echo json_encode([
-        'status_code' => 0,
+        'status' => 0,
         'msg' => '',
         'data' => $data
     ]);
 
 } catch (KBException $e) {
-    echo json_encode(['status_code' => $e->getCode(), 'msg' => $e->getMessage()]);
+    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
 } catch (Exception $e) {
-    echo json_encode(['status_code' => -200, 'msg' => 'Unknow error']);
+    echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
 }

@@ -14,6 +14,7 @@ class KBException extends Exception
         -30 => 'Phone number does not exist',
         -40 => 'Repeat registration',
         -50 => 'File is not standardized',
+        -60 => 'Database error',
         -100 => 'Bad request',
         -101 => 'Wrong pid',
         -102 => 'Unexpeted symbol',

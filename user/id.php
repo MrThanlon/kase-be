@@ -10,6 +10,7 @@
 require_once __DIR__ . '/../include/jwt.php';
 try {
     header('Content-type: application/json');
+    header('Access-Control-Allow-Origin: ' . CORS);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
         //bad request
         throw new KBException(-100);
@@ -18,7 +19,7 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     $ans = $db->query("SELECT `tel` FROM `user` WHERE `uid`={$jwt['uid']}")->fetch_row();
     echo json_encode([
-        'status_code' => 0,
+        'status' => 0,
         'msg' => '',
         'type' => $jwt['type'],
         'uid' => $jwt['uid'],
@@ -26,7 +27,7 @@ try {
     ]);
 
 } catch (KBException $e) {
-    echo json_encode(['status_code' => $e->getCode(), 'msg' => $e->getMessage()]);
+    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
 } catch (Exception $e) {
-    echo json_encode(['status_code' => -200, 'msg' => 'Unknow error']);
+    echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
 }
