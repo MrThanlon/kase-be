@@ -33,12 +33,12 @@
 
 ## 术语
 
-- *申报材料（content）*：由申报人提交的材料
+- *课题（content/subject）*：由申报人提交
 - *项目（project）*：一个项目下包含多个项目分区，二级管理员控制
-- *材料分组（project group）*：对项目的细分，用于对评审人员和申报材料分组，二级管理员控制
+- *材料分组（project group）*：对项目的细分，用于对评审人员和课题分组，二级管理员控制
 - *用户（user）*，用户有四类：
   1. *申报人（applicant）*：申报人可以在页面注册、重设密码、提交材料、绑定邮箱，审核状态改变时通过短信和邮箱通知申报人。注册只能使用手机号。
-  2. *评审员（judge）*：评审员账户和密码都由二级管理员分配，给通过审核的申报材料打分。
+  2. *评审员（judge）*：评审员账户和密码都由二级管理员分配，给通过审核的课题打分。
   3. *二级管理员（administrator）*：由超级管理员分配账户，管理评审员。
   4. *超级管理员（system）*：系统操作者，管理二级管理员。
 
@@ -250,9 +250,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 ### 申报人
 
-#### 拉取申请材料的列表
-
-仅限申报人身份。
+#### 拉取课题列表
 
 @request
 
@@ -271,16 +269,53 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     msg: String,
     data: [
         {
-        	name: String, //申报材料名称
-        	cid: Number, //申报材料唯一编号
+        	name: String, //课题名称
+        	cid: Number, //课题唯一编号
         	pid: Number, //隶属于的项目的编号
         	applicant: String, //申请人
         	tel: String, //申请人手机号
         	status: Number, //材料状态，0->未审核，1->已过审，-1->审核未通过
-            pid: Number //所属项目
+          pid: Number, //所属项目
+          time: String, //日期,YYYY-MM-DD HH:mm:SS
+          pdf: Boolean, //是否有文档
+          zip: Boolean, //是否有附件
+          score: Number //分数，没有则为null
         },
         ...
     ]
+}
+```
+
+#### 查询课题分数
+
+@request
+
+```json
+{
+    URL: "data/app/query_score",
+    method: "POST",
+  	param: {
+      cid: Number //课题编号
+    }
+}
+```
+
+@return
+
+```json
+{
+  	status_code: Number,
+    msg: String,
+  	data: {
+      total: Number, //总分
+      detail: [
+        {
+          text: String, //题目
+          score: Number //分数
+        },
+        ...
+      ]
+    }
 }
 ```
 
@@ -366,7 +401,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     URL: "data/app/new_app",
     method: "POST",
     param: {
-        name: String, //申报材料名称
+        name: String, //课题名称
         pid: Number, //隶属于的项目的编号
         applicant: String //申请人
     }
@@ -395,7 +430,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     method: "POST",
     param: {
         cid: Number, //申请材料的编号
-    	pdf: File //文件
+    		pdf: File //文件
     }
 }
 ```
@@ -515,9 +550,9 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 拉取材料列表
+#### 拉取课题列表
 
-需要评审的材料列表。
+所有课题。
 
 @request
 
@@ -536,8 +571,8 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     msg: String,
     data: [
         {
-        	name: String, //申报材料名称
-        	cid: Number, //申报材料唯一编号
+        	name: String, //课题名称
+        	cid: Number, //课题唯一编号
         	applicant: String, //申请人
             status: Number,
             pid: Number, //所属项目
@@ -660,7 +695,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     method: "POST",
     param: {
         cid: Number, //材料的编号
-        pqid: Number
+        pqid: Number //project下的子question id
     }
 }
 ```
@@ -759,7 +794,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 
 
-#### 拉取材料组
+#### 拉取课题分区
 
 @requests
 
@@ -782,7 +817,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     data: [
         {
         	gid: Number, //分区编号
-            contents:Number, //申报材料数量
+            contents:Number, //课题数量
             users: Number //评审员数量
         },
         ...
@@ -790,7 +825,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 查询材料组详细
+#### 查询课题分区详细
 
 包括该分区下的材料和评审员有哪些。
 
@@ -825,7 +860,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 创建材料组
+#### 创建课题分区
 
 @request
 
@@ -873,9 +908,9 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 拉取项目下的申报材料列表
+#### 拉取项目下的课题列表
 
-返回项目下所有申报材料信息。
+返回项目下所有课题信息。
 
 @request
 
@@ -932,7 +967,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 分配材料到材料组
+#### 分配课题到分区
 
 @request
 
@@ -943,6 +978,30 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     param: {
         cid: Number, //材料编号
         gid: Number //材料组编号
+    }
+}
+```
+
+@return
+
+```json
+{
+    status_code: Number,
+    msg: String
+}
+```
+
+#### 分配评审到分区
+
+@request
+
+```json
+{
+    URL: "data/adm/mod_user",
+    method: "POST",
+    param: {
+        cid: Number, //课题编号
+        uid: Number //评审编号
     }
 }
 ```

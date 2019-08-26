@@ -1,10 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: hzy
- * Date: 2019/2/4
- * Time: 10:46
- * 拉取项目列表
+ * 申请人接口-查询分数
  */
 
 try {
@@ -15,20 +11,32 @@ try {
         throw new KBException(-100);
     if (!key_exists('token', $_COOKIE))
         throw new KBException(-10);
+    if (!key_exists('cid', $_POST) || !preg_match("/^\d*?$/AD", $_POST['cid']))
+        throw new KBException(-100);
+
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 1)
         throw new KBException(-100);
-    $ans = $db->query("SELECT `pid`,`name` FROM `project`");
-    $data = [];
-    for ($i = $ans->num_rows; $i > 0; $i--) {
-        $d = $ans->fetch_assoc();
-        $d['pid'] = (int)$d['pid'];
-        $data[] = $d;
-    }
+    //查找cid
+    $cid = (int)$_POST['cid'];
+    $ans = $db->query("SELECT `pid` FROM `content` WHERE `cid`={$cid} LIMIT 1");
+    if ($ans->num_rows === 0)
+        throw new KBException(-103);
+    $pid = (int)(($ans->fetch_row())[0]);
+
+    //拉取题目
+    $ans = $db->query("SELECT `qid`,`name` FROM `question` WHERE `pid`={$pid}");
+    $questions = $ans->fetch_all();
+
+    //拉取分数
+    $ans = $db->query("SELECT `score` FROM `score`");
+
+
+    //响应
     echo json_encode([
         'status' => 0,
         'msg' => '',
-        'data' => $data
+        'data' => ''
     ]);
 
 } catch (KBException $e) {

@@ -21,6 +21,7 @@ try {
         throw new KBException(-100);
     if (!key_exists('cid', $_POST) || !key_exists('score', $_POST) || !key_exists('pqid', $_POST))
         throw new KBException(-100);
+
     if (!preg_match("/^\d{1,3}$/AD", $_POST['score']) || !preg_match("/^\d*?$/AD", $_POST['cid'])
         || !!preg_match("/^\d*?$/AD", $_POST['pqid']))
         throw new KBException(-100);

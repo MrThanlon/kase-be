@@ -38,10 +38,14 @@ try {
         throw new KBException(-112);
     //检查是否已存在关联，存在的话就没事了
     $ans = $db->query("SELECT `id` FROM `content-group` WHERE `cid`={$cid} AND `gid`={$gid}");
-    if ($ans->num_rows !== 0)
+    if ($ans->num_rows !== 0) {
         echo json_encode(['status' => 0, 'msg' => '']);
+        exit();
+    }
     //插入
     $db->query("INSERT INTO `content-group` (`cid`,`gid`) VALUES ({$cid},{$gid})");
+    //修改
+    $db->query("UPDATE `pgroup` SET `contents`=`contents`+1 WHERE `gid`={$gid}");
     if ($db->sqlstate !== '00000')
         throw new KBException(-60);
     echo json_encode(['status' => 0, 'msg' => '']);

@@ -1,16 +1,17 @@
 {
-    "require": {
-    	"ext-json": "*",
-        "ext-mysqli": "*",
-        "smalot/pdfparser": "^0.14.0",
-        "phpoffice/phpspreadsheet": "^1.6",
-        "qcloudsms/qcloudsms_php": "^0.1.4",
-        "guzzlehttp/guzzle": "^6.3"
-    },
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "https://packagist.laravel-china.org"
-        }
+  "require": {
+    "ext-json": "*",
+    "ext-mysqli": "*",
+    "ext-zip": "*",
+    "smalot/pdfparser": "^0.14.0",
+    "phpoffice/phpspreadsheet": "^1.6",
+    "qcloudsms/qcloudsms_php": "^0.1.4",
+    "guzzlehttp/guzzle": "^6.3"
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.laravel-china.org"
     }
+  }
 }

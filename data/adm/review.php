@@ -27,10 +27,10 @@ try {
     if ($ans->num_rows === 0)
         throw new KBException(-103);
     $res = $ans->fetch_row();
-    if ($res[0] !== 0)
+    if ($res[0] !== '0')
         throw new KBException(-111);
     //执行审核
-    $status = $_POST['result'] === 1 ? 1 : -1;
+    $status = $_POST['result'] === '1' ? 1 : -1;
     $name = $res[1];
     $uid = (int)$res[2];
     $pid = (int)$res[3];
@@ -40,10 +40,10 @@ try {
         $db->query("UPDATE `project` SET `passed`=`passed`+1 WHERE `pid`={$pid} LIMIT 1");
     if ($db->sqlstate !== '00000')
         throw new KBException(-60);
-    //短信通知
+    //TODO:短信通知
     $ans = $db->query("SELECT `username` FROM `user` WHERE `uid`={$uid} LIMIT 1");
     $res = $ans->fetch_row();
-    snotice($status === 1, $cid, $name, $res[0]);
+    //snotice($status === 1, $cid, $name, $res[0]);
     //响应
     echo json_encode(['status' => 0, 'msg' => '']);
 

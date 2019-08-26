@@ -2,9 +2,9 @@
 /**
  * Created by PhpStorm.
  * User: hzy
- * Date: 2019/2/4
- * Time: 10:46
- * 拉取项目列表
+ * Date: 2019/2/15
+ * Time: 11:42
+ * 分配审核到分区
  */
 
 try {
@@ -16,20 +16,12 @@ try {
     if (!key_exists('token', $_COOKIE))
         throw new KBException(-10);
     $jwt = jwt_decode($_COOKIE['token']);
-    if ($jwt['type'] !== 1)
+    if ($jwt['type'] !== 3 || !key_exists('gid', $_POST) || !preg_match("/^\d*?$/AD", $_POST['gid']) ||
+        !key_exists('cid', $_POST) || !preg_match("/^\d*?$/AD", $_POST['cid']))
         throw new KBException(-100);
-    $ans = $db->query("SELECT `pid`,`name` FROM `project`");
-    $data = [];
-    for ($i = $ans->num_rows; $i > 0; $i--) {
-        $d = $ans->fetch_assoc();
-        $d['pid'] = (int)$d['pid'];
-        $data[] = $d;
-    }
-    echo json_encode([
-        'status' => 0,
-        'msg' => '',
-        'data' => $data
-    ]);
+    $gid = (int)$_POST['gid'];
+    $cid = (int)$_POST['cid'];
+
 
 } catch (KBException $e) {
     echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
