@@ -1,0 +1,72 @@
+image: registry.stuhome.com/devops/dockerepo/docker:1.0.1
+
+stages:
+    - build
+    - deploy
+
+build-staging-image:
+    stage: build
+    services:
+        - docker:18.09.7-dind
+
+    variables:
+        DOCKER_HOST: tcp://docker:2375/
+        DOCKER_DRIVER: overlay2
+
+    script:
+    - star_ci_build staging kase-be
+
+    only:
+    - staging
+
+    allow_failure: false
+
+deploy-staging:
+    stage: deploy
+
+    script:
+    - star_ci_deploy staging kase-be
+
+    only:
+    - staging
+
+    environment:
+        name: staging
+    tags:
+    - staging
+
+    allow_failure: false
+    when: on_success
+
+
+build-production-image:
+    stage: build
+    services:
+        - docker:18.09.7-dind
+
+    variables:
+        DOCKER_HOST: tcp://docker:2375/
+        DOCKER_DRIVER: overlay2
+
+    script:
+    - star_ci_build production kase-be 
+
+    allow_failure: false
+    only:
+    - master
+
+deploy-production:
+    stage: deploy
+
+    script:
+    - star_ci_deploy production kase-be
+
+    only:
+    - master
+
+    environment:
+        name: production
+    tags:
+    - production
+
+    allow_failure: false

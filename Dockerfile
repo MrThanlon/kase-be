@@ -1,10 +1,11 @@
-FROM    php:7.1-apache
-RUN     sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list \
-        && apt-get update \
-        && apt-get install -y zlib1g-dev \
-        && mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
-        && docker-php-ext-install -j$(nproc) json \
-        && docker-php-ext-install -j$(nproc) zip \
-        && docker-php-ext-install -j$(nproc) mysqli
+FROM registry.stuhome.com/devops/dockerepo/php-fpm:7-1.0.1
 
-COPY    .   /var/www/html/
+COPY ./ /build/
+
+RUN set -xe;\
+    cd /build;\
+    cp nginx.conf /etc/nginx/conf.d/;\
+    cd /;\
+    mv /build /app;\
+    mkdir /storage;\
+    chmod 0777 /storage;\
