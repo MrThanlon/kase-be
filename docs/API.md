@@ -11,6 +11,7 @@
 | -20  |     短信功能失败     | 注意即使短信失败依然可能执行动作 |
 | -30  | 手机号不存在/未注册  |               注册               |
 | -40  |     不能重复注册     |             重设密码             |
+| -41  |    用户名u不存在     |            检查用户名            |
 | -50  |      文件不规范      |             重新上传             |
 | -60  |      数据库错误      |            联系开发者            |
 | -100 |       请求错误       |            没有按规范            |
@@ -50,7 +51,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 {
     u: String, //用户名，申报人的是手机号，其他的是自定义字符串
     uid: Number, //用户唯一号码
-    type: Number, //用户身份，0.未启用，1.申报人，2.审核员，3.二级管理员，4.超级管理员
+    type: Number, //用户身份，0.未启用，1.申报人，2.审核员，3.管理员
     version: Number, //用于实现登出和修改密码后token失效的功能
     expire: Number, //过期时间，unix时间戳
     born: Number //生成token的时间，unix时间戳
@@ -574,10 +575,9 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
         	name: String, //课题名称
         	cid: Number, //课题唯一编号
         	applicant: String, //申请人
-            status: Number,
-            pid: Number, //所属项目
-          pdf: Boolean, //是否上传PDF
-          zip: Boolean //是否上传附件
+          status: Number, //状态
+          zip: Boolean, //是否上传附件
+          time: String //提交时间
         },
         ...
     ]
@@ -710,7 +710,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-### 二级管理员
+### 管理员
 
 #### 拉取项目列表
 
@@ -1015,13 +1015,13 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 拉取通知
+#### 拉取申请通知
 
 @request
 
 ```json
 {
-    URL: "data/adm/notice",
+    URL: "data/adm/app_notice",
     method: "POST"
 }
 ```
@@ -1036,13 +1036,13 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 修改通知
+#### 修改申请通知
 
 @request
 
 ```json
 {
-    URL: "data/adm/mod_notice",
+    URL: "data/adm/mod_app_notice",
     method: "POST",
     param: {
         content: String //修改成的内容
@@ -1059,13 +1059,13 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 拉取标准信息
+#### 拉取评审通知
 
 @request
 
 ```json
 {
-    URL: "data/adm/standard",
+    URL: "data/adm/jug_notice",
     method: "POST"
 }
 ```
@@ -1080,13 +1080,13 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 修改标准信息
+#### 修改评审通知
 
 @request
 
 ```json
 {
-    URL: "data/adm/mod_standard",
+    URL: "data/adm/mod_jug_notice",
     method: "POST",
     param: {
         content: String //修改成的内容
@@ -1248,29 +1248,32 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-### 一级管理员
-
-#### 创建二级管理员
+#### 创建管理员
 
 @request
 
 ```json
 {
-    URL: "data/root/add_adm",
-    method: "POST",
-    param: {
-        u: String, //用户名
-        p: String //密码
+  	URL: "data/adm/new_adm",
+  	method: "POST",
+  	param: {
+      	username: String, //用户名
+      	password: String //密码
     }
 }
 ```
 
-@return
+#### 删除管理员
+
+@request
 
 ```json
 {
-    status_code: Number,
-    msg: String
+  	URL: "data/adm/del_adm",
+  	method: "POST",
+  	param: {
+      	username: String //用户名
+    }
 }
 ```
 

@@ -13,6 +13,7 @@ class KBException extends Exception
         -20 => 'Message failed',
         -30 => 'Phone number does not exist',
         -40 => 'Repeat registration',
+        -41 => 'Wrong username',
         -50 => 'File is not standardized',
         -60 => 'Database error',
         -100 => 'Bad request',

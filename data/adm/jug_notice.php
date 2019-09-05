@@ -3,8 +3,8 @@
  * Created by PhpStorm.
  * User: hzy
  * Date: 2019/2/17
- * Time: 11:28
- * 修改通知
+ * Time: 11:25
+ * 拉取申请通知
  */
 
 try {
@@ -16,14 +16,21 @@ try {
     if (!key_exists('token', $_COOKIE))
         throw new KBException(-10);
     $jwt = jwt_decode($_COOKIE['token']);
-    if ($jwt['type'] !== 3 || !key_exists('content', $_POST))
+    if ($jwt['type'] !== 3)
         throw new KBException(-100);
-    $content = $db->escape_string($_POST['content']);
-    $db->query("UPDATE `normal` SET `value`='{$content}' WHERE `nid`=1 LIMIT 1");
-    if ($db->sqlstate !== '00000')
-        throw new KBException(-60);
-    echo json_encode(['status' => 0, 'msg' => '']);
-
+    $ans = $db->query("SELECT `value` FROM `normal` WHERE `nid`=2 LIMIT 1");
+    $notice = '';
+    if ($ans->num_rows === 0) {
+        //没有数据
+        $db->query("INSERT INTO `normal` (`nid`,`value`) VALUES (2,'')");
+    } else {
+        $notice = ($ans->fetch_row())[0];
+    }
+    echo json_encode([
+        'status' => 0,
+        'msg' => '',
+        'content' => $notice
+    ]);
 } catch (KBException $e) {
     echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
 } catch (Exception $e) {
