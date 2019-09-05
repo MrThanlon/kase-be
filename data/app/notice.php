@@ -19,10 +19,17 @@ try {
     if ($jwt['type'] !== 1)
         throw new KBException(-100);
     $ans = $db->query("SELECT `value` FROM `normal` WHERE `nid`=1 LIMIT 1");
+    $notice = '';
+    if ($ans->num_rows === 0) {
+        //没有数据
+        $db->query("INSERT INTO `normal` (`nid`,`value`) VALUES (1,'')");
+    } else {
+        $notice = ($ans->fetch_row())[0];
+    }
     echo json_encode([
-        'status'=>0,
-        'msg'=>'',
-        'content'=>($ans->fetch_row())[0]
+        'status' => 0,
+        'msg' => '',
+        'content' => $notice
     ]);
 
 } catch (KBException $e) {

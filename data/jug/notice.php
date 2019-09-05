@@ -18,11 +18,18 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 2)
         throw new KBException(-100);
-    $ans = $db->query("SELECT `value` FROM `normal` WHERE `nid`=1 LIMIT 1");
+    $ans = $db->query("SELECT `value` FROM `normal` WHERE `nid`=2 LIMIT 1");
+    $notice = '';
+    if ($ans->num_rows === 0) {
+        //没有数据
+        $db->query("INSERT INTO `normal` (`nid`,`value`) VALUES (2,'')");
+    } else {
+        $notice = ($ans->fetch_row())[0];
+    }
     echo json_encode([
-        'status'=>0,
-        'msg'=>'',
-        'content'=>($ans->fetch_row())[0]
+        'status' => 0,
+        'msg' => '',
+        'content' => $notice
     ]);
 
 } catch (KBException $e) {

@@ -370,29 +370,6 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 拉取标准信息
-
-放在申报页的内容。
-
-@request
-
-```json
-{
-    URL: "data/app/standard",
-    method: "POST"
-}
-```
-
-@return
-
-```json
-{
-    status_code: Number,
-    msg: String,
-    content: String //内容
-}
-```
-
 #### 创建新申请
 
 @request
@@ -516,27 +493,6 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 ```json
 {
     URL: "data/jug/notice",
-    method: "POST"
-}
-```
-
-@return
-
-```json
-{
-    status_code: Number,
-    msg: String,
-    content: String //内容
-}
-```
-
-#### 拉取标准信息
-
-@request
-
-```json
-{
-    URL: "data/jug/standard",
     method: "POST"
 }
 ```
