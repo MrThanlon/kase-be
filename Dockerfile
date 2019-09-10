@@ -5,7 +5,6 @@ COPY ./ /build/
 RUN set -xe;\
     cd /build;\
     cp nginx.conf /etc/nginx/conf.d/;\
-    envsubst -v config.php.temp > config.php;\
     curl -o /usr/local/bin/composer https://getcomposer.org/download/1.9.0/composer.phar;\
     chmod +x /usr/local/bin/composer;\
     composer install -vvv;\
