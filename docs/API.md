@@ -287,6 +287,44 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
+#### 拉取单个课题
+
+@request
+
+```json
+{
+    URL: "data/app/subject",
+    method: "POST",
+  	param: {
+      	cid: Number // 课题ID
+    }
+}
+```
+
+@return
+
+```json
+{
+    status_code: Number,
+    msg: String,
+    data: {
+        	name: String, //课题名称
+        	cid: Number, //课题唯一编号
+        	pid: Number, //隶属于的项目的编号
+        	applicant: String, //申请人
+        	tel: String, //申请人手机号
+        	status: Number, //材料状态，0->未审核，1->已过审，-1->审核未通过
+          pid: Number, //所属项目
+          time: String, //日期,YYYY-MM-DD HH:mm:SS
+          pdf: Boolean, //是否有文档
+          zip: Boolean, //是否有附件
+          score: Number //分数，没有则为null
+    }
+}
+```
+
+
+
 #### 查询课题分数
 
 @request

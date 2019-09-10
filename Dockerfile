@@ -11,4 +11,4 @@ RUN set -xe;\
     cd /;\
     mv /build /app;\
     mkdir /storage;\
-    chmod 0777 /storage;\
+    chmod 0777 /storage
