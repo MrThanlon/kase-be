@@ -31,8 +31,8 @@ try {
         $db->query("UPDATE `user` SET `last_login`=CURRENT_TIMESTAMP WHERE `user`.`uid` = {$res[3]}");
         //生成token
         $jwt = ['u' => $res[1], 'uid' => (int)$res[3], 'type' => (int)$res[2], 'version' => (int)$res[4],
-            'born' => time(), 'expire' => time() + COOKIE_EXPIRE];
-        setcookie('token', jwt_encode($jwt), time() + COOKIE_EXPIRE,
+            'born' => time(), 'expire' => time() + EXPIRE];
+        setcookie('token', jwt_encode($jwt), time() + EXPIRE,
             '/', DOMAIN, false, false);
         echo json_encode(['status' => 0, 'msg' => '']);
     } else {

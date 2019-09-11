@@ -53,5 +53,3 @@ define('SECRET', 'MasterZYF--sahjfb vdnwmef');
 define('ADMIN_USERNAME', 'root');
 //超级管理员密码
 define('ADMIN_PASSWORD', 'hello');
-//cookie过期时间，单位：秒
-define('COOKIE_EXPIRE', 24 * 60 * 60);
