@@ -8,7 +8,6 @@
  * 首先从user-group表中读取对应gid，然后读取所有cid
  */
 
-require_once __DIR__ . '/../include/jwt.php';
 try {
     require_once __DIR__ . '/../../include/jwt.php';
     header('Content-type: application/json');
