@@ -47,7 +47,7 @@ try {
     foreach ($res as $val) {
         $cids[$val[0]] = 1;
     }
-    //拉取
+    //从cid拉取content
     $data = [];
     //合成WHERE语句
     $WHERE_str = '';
