@@ -8,8 +8,8 @@
  */
 
 try {
-    require '../../include/jwt.php';
-    require '../../include/check_cid.php';
+    require_once __DIR__ . '/../../include/jwt.php';
+    require_once __DIR__ . '/../../include/check_cid.php';
     if ($_SERVER['REQUEST_METHOD'] !== 'GET')
         //bad request
         throw new KBException(-100);

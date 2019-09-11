@@ -8,9 +8,9 @@
  */
 
 try {
+    require_once __DIR__ . '/../../include/jwt.php';
+    require_once __DIR__ . '/../../include/check_cid.php';
     header('Content-type: application/json');
-    require '../../include/jwt.php';
-    require '../../include/check_cid.php';
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
         //bad request
         throw new KBException(-100);

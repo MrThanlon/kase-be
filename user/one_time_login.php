@@ -7,8 +7,8 @@
  * 无密码登录
  */
 
-require_once __DIR__ . '../include/jwt.php';
 try {
+    require_once __DIR__ . '/../include/jwt.php';
     header('Content-type: application/json');
     if ($_SERVER['REQUEST_METHOD'] !== 'POST' ||
         !key_exists('token', $_POST) || !key_exists('u', $_POST) ||

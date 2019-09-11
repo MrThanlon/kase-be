@@ -8,14 +8,13 @@
  * 部分与download_empty_table重合
  */
 
-require_once __DIR__ . '/../../include/jwt.php';
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../include/letter_sheet.php';
-
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 try {
+    require_once __DIR__ . '/../../include/jwt.php';
+    require_once __DIR__ . '/../../vendor/autoload.php';
+    require_once __DIR__ . '/../../include/letter_sheet.php';
     if ($_SERVER['REQUEST_METHOD'] !== 'GET')
         //bad request
         throw new KBException(-100);

@@ -8,8 +8,8 @@
  */
 
 try {
+    require_once __DIR__ . '/../../include/jwt.php';
     header('Content-type: application/json');
-    require_once '../../include/jwt.php';
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
         //bad request
         throw new KBException(-100);

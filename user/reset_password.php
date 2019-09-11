@@ -7,8 +7,8 @@
  * 重设密码
  */
 
-require_once __DIR__ . '/../include/jwt.php';
 try {
+    require_once __DIR__ . '/../include/jwt.php';
     header('Content-type: application/json');
     if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !key_exists('p', $_POST) || !key_exists('op', $_POST))
         //bad request

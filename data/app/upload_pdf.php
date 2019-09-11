@@ -8,9 +8,9 @@
  */
 
 try {
+    require_once __DIR__ . '/../../include/jwt.php';
+    require_once __DIR__ . '/../../vendor/autoload.php';
     header('Content-type: application/json');
-    require '../../include/jwt.php';
-    require '../../vendor/autoload.php';
     $parser = new \Smalot\PdfParser\Parser();
 
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')

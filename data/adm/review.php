@@ -7,9 +7,9 @@
  * 审核
  */
 
-require_once __DIR__ . '/../../include/jwt.php';
-require_once __DIR__ . '/../../include/sms.php';
 try {
+    require_once __DIR__ . '/../../include/jwt.php';
+    require_once __DIR__ . '/../../include/sms.php';
     header('Content-type: application/json');
 
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')

@@ -7,8 +7,8 @@
  * 登录API
  */
 
-require_once __DIR__ . '/../include/jwt.php';
 try {
+    require_once __DIR__ . '/../include/jwt.php';
     header('Content-type: application/json');
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
         //bad request

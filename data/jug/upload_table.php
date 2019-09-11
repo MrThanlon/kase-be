@@ -7,11 +7,10 @@
  * 上传打分表，解析表中数据
  */
 
-require_once __DIR__ . '/../../include/jwt.php';
-require_once __DIR__ . '/../../include/letter_sheet.php';
-require_once __DIR__ . '/../../vendor/autoload.php';
-
 try {
+    require_once __DIR__ . '/../../include/jwt.php';
+    require_once __DIR__ . '/../../include/letter_sheet.php';
+    require_once __DIR__ . '/../../vendor/autoload.php';
     header('Content-type: application/json');
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
         //bad request
