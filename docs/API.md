@@ -1088,12 +1088,30 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
+#### 评审员列表
+
+@request
+
+```json
+{
+  	URL: "data/adm/query_user",
+  	method: "POST"
+}
+```
+
 @return
 
 ```json
 {
     status_code: Number,
-    msg: String
+    msg: String,
+    data: [
+      	{
+          	u: String, //用户名
+          	stat: Number, //0. 已提交打分表，1.未提交
+          	time: String //提交时间
+        }
+    ]
 }
 ```
 
@@ -1222,6 +1240,27 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     param: {
         pid: Number, //项目id
         u: Number //评审员账户名
+    }
+}
+```
+
+#### 批量下载评审员的打分表
+
+如果正常，直接下载文件，响应值不是JSON格式而是二进制文件流。如果没有则响应为空。
+
+@request
+
+```json
+{
+    URL: "data/adm/download_tables",
+    method: "POST/json",
+    param: {
+        pid: Number, //项目id
+      	user: [
+          	"jug1",
+          	"jug2",
+          	...
+        ]
     }
 }
 ```
