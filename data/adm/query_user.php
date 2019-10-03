@@ -10,7 +10,41 @@
 try {
     require_once __DIR__ . '/../../include/jwt.php';
     header('Content-type: application/json');
-    $ans = $db->query("SELECT ")
+    // 拉取评审员username-uid
+    $ans = $db->query("SELECT `uid`,`username` FROM `user` WHERE `type`=2");
+    $u = $ans->fetch_all();
+
+    $uids = array_reduce($u, function ($pre, $cur) {
+        $pre[$cur[0]] = $cur[1];
+        return $pre;
+    }, []);
+    // 拉取tables
+    $ans = $db->query("SELECT `uid`,`time` FROM `tables` WHERE `uid` IN (SELECT `uid` FROM `user` WHERE `type`=2)");
+    $t = $ans->fetch_all();
+    $tables = array_reduce($t, function ($pre, $cur) {
+        $pre[$cur[0]] = $cur[1];
+        return $pre;
+    });
+    // 合成数据
+    foreach ($u as &$val) {
+        $uid = $val[0];
+        $username = $val[1];
+        $stat = key_exists($uid, $tables);
+
+        $val = [
+            'u' => $username,
+            'stat' => $stat
+        ];
+        if ($stat) {
+            $val['time'] = $tables[$uid];
+        }
+    }
+
+    echo json_encode([
+        'status' => 0,
+        'msg' => '',
+        'data' => $u
+    ]);
 
 } catch (KBException $e) {
     echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);

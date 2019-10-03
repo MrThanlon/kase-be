@@ -172,7 +172,8 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     msg: String,
     type: Number, //0->未确定，1->申报人，2->审核员，3->二级管理员，4->超级管理员
     uid: Number, //用户编号
-    tel: Number //用户手机号，没有则为0
+    tel: Number, //用户手机号，没有则为0
+  	username: String //用户名
 }
 ```
 
@@ -878,6 +879,20 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
+#### 删除课题分区
+
+@request
+
+```json
+{
+    URL: "data/adm/del_group",
+    method: "POST",
+    param: {
+        gid: Number //分区id
+    }
+}
+```
+
 #### 创建评审员账号
 
 @request
@@ -893,12 +908,17 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-@return
+#### 删除评审员账号
+
+@request
 
 ```json
 {
-    status_code: Number,
-    msg: String
+    URL: "data/adm/del_user",
+    method: "POST",
+    param: {
+        u: String, //用户名
+    }
 }
 ```
 
@@ -976,12 +996,16 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-@return
+#### 从分区移除课题
 
 ```json
 {
-    status_code: Number,
-    msg: String
+    URL: "data/adm/mod_content_group",
+    method: "POST",
+    param: {
+        cid: Number, //材料编号
+        gid: Number //材料组编号
+    }
 }
 ```
 
@@ -994,18 +1018,24 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     URL: "data/adm/mod_user",
     method: "POST",
     param: {
-        cid: Number, //课题编号
+        gid: Number, //分区编号
         uid: Number //评审编号
     }
 }
 ```
 
-@return
+#### 从分区移除评审
+
+@request
 
 ```json
 {
-    status_code: Number,
-    msg: String
+    URL: "data/adm/mod_user_group",
+    method: "POST",
+    param: {
+        gid: Number, //分区编号
+        uid: Number //评审编号
+    }
 }
 ```
 

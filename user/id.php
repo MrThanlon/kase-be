@@ -22,7 +22,8 @@ try {
         'msg' => '',
         'type' => $jwt['type'],
         'uid' => $jwt['uid'],
-        'tel' => (int)$ans[0]
+        'tel' => (int)$ans[0],
+        'username' => $jwt['u']
     ]);
 
 } catch (KBException $e) {
