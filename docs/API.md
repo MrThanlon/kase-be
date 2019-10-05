@@ -496,15 +496,6 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-@return
-
-```json
-{
-    status_code: Number,
-    msg: String
-}
-```
-
 #### 下载附件
 
 直接就是文件，不是json。
@@ -746,18 +737,37 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     method: "POST",
     param: {
         name: String, //项目名称
-        total: Number, //总分数
-        total_only: Number //是否可只打总分？（体现在打分表中），1.是，2.否
+      	start: Number, //开始时间，unix时间戳
+      	end: Number //结束时间，unix时间戳
     }
 }
 ```
 
-@return
+#### 拉取项目信息
+
+@request
+
+```json
+{
+    URL: "data/adm/query_prj",
+    method: "POST",
+    param: {
+        pid: Number
+    }
+}
+```
+
+@respnse
 
 ```json
 {
     status_code: Number,
-    msg: String
+    msg: String,
+  	data: {
+        name: String, //项目名称
+        start: Number, //开始时间，unix时间戳
+      	end: Number //结束时间，unix时间戳
+    }
 }
 ```
 
@@ -772,22 +782,11 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     param: {
         pid: Number, //项目id
         name: String, //项目名称
-        total: Number, //总分数
-        total_only: Number //是否可只打总分？（体现在打分表中），1.是，2.否
+        start: Number, //开始时间，unix时间戳
+      	end: Number //结束时间，unix时间戳
     }
 }
 ```
-
-@return
-
-```json
-{
-    status_code: Number,
-    msg: String
-}
-```
-
-
 
 #### 拉取课题分区
 
@@ -1122,6 +1121,34 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     method: "POST",
     param: {
         content: String //修改成的内容
+    }
+}
+```
+
+#### 上传评审材料
+
+只接收后缀名为`zip`的压缩文件，会尝试解压文件。重复上传则替换原来的文件。已经上传过的不允许再次上传。
+
+```json
+{
+    URL: "data/adm/upload_jug",
+    method: "POST",
+    param: {
+    		zip: File //文件
+    }
+}
+```
+
+#### 上传申报材料
+
+只接收后缀名为`zip`的压缩文件，会尝试解压文件。重复上传则替换原来的文件。已经上传过的不允许再次上传。
+
+```json
+{
+    URL: "data/adm/upload_app",
+    method: "POST",
+    param: {
+    		zip: File //文件
     }
 }
 ```
