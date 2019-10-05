@@ -812,8 +812,16 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     data: [
         {
         	gid: Number, //分区编号
-            contents:Number, //课题数量
-            users: Number //评审员数量
+          eva: [
+            	"jug1", //用户名
+            	"jug2",
+            	...
+          ],
+          content: [
+            	Number, //content ID, cid
+            	Number,
+            	...
+          ]
         },
         ...
     ]
@@ -1339,4 +1347,31 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     }
 }
 ```
+
+#### 拉取管理员列表
+
+@request
+
+```json
+{
+  	URL: "data/adm/list_adm",
+  	method: "POST"
+}
+```
+
+@return
+
+```json
+{
+    status_code: Number,
+    msg: String,
+  	data: [
+      	"adm1",
+      	"adm2",
+      	...
+    ]
+}
+```
+
+
 
