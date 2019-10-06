@@ -16,9 +16,12 @@ try {
     if (!key_exists('token', $_COOKIE))
         throw new KBException(-10);
     $jwt = jwt_decode($_COOKIE['token']);
-    if ($jwt['type'] !== 3 || !key_exists('pid', $_POST) || !preg_match("/^\d*?$/AD", $_POST['pid']))
+    if ($jwt['type'] !== 3 ||
+        !key_exists('pid', $_POST) ||
+        !preg_match("/^\d*?$/AD", $_POST['pid']))
         throw new KBException(-100);
-    $pid = $_POST['pid'];
+
+    $pid = (int)$_POST['pid'];
     //检查pid
     $ans = $db->query("SELECT 1 FROM `project` WHERE `pid`={$pid}");
     if ($ans->num_rows === 0)

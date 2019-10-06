@@ -11,7 +11,7 @@
 | -20  |     短信功能失败     | 注意即使短信失败依然可能执行动作 |
 | -30  | 手机号不存在/未注册  |               注册               |
 | -40  |     不能重复注册     |             重设密码             |
-| -41  |    用户名u不存在     |            检查用户名            |
+| -41  |     用户名不存在     |            检查用户名            |
 | -50  |      文件不规范      |             重新上传             |
 | -60  |      数据库错误      |            联系开发者            |
 | -100 |       请求错误       |            没有按规范            |
@@ -720,7 +720,9 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
             name: String, //项目名称
             pid: Number, //项目编号
             groups: Number, //分区数量
-            contents: Number //材料数量
+            contents: Number, //材料数量
+          	start: Number, //开始时间，unix时间戳
+          	end: Number //结束时间，unix时间戳
         },
         ...
     ]
@@ -915,6 +917,21 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
+#### 分配评审员到项目
+
+@request
+
+```json
+{
+    URL: "data/adm/mod_user_project",
+    method: "POST",
+    param: {
+        u: String, //用户名
+        pid: Number //项目编号
+    }
+}
+```
+
 #### 删除评审员账号
 
 @request
@@ -961,6 +978,22 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
         },
         ...
     ]
+}
+```
+
+#### 下载课题PDF
+
+如果正常，直接下载文件，响应值不是JSON格式而是二进制文件流。如果没有则响应为空。
+
+@request
+
+```json
+{
+    URL: "data/adm/download_pdf",
+    method: "POST",
+    param: {
+        cid: Number //课题编号
+    }
 }
 ```
 
@@ -1026,7 +1059,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     method: "POST",
     param: {
         gid: Number, //分区编号
-        uid: Number //评审编号
+        u: String //评审用户名
     }
 }
 ```
@@ -1041,7 +1074,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     method: "POST",
     param: {
         gid: Number, //分区编号
-        uid: Number //评审编号
+        u: String //评审用户名
     }
 }
 ```

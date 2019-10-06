@@ -18,7 +18,8 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 3)
         throw new KBException(-100);
-    if (!key_exists('qid', $_POST) || !preg_match("/^[1-9]\d*$/AD", $_POST['qid']))
+    if (!key_exists('qid', $_POST) ||
+        !preg_match("/^[1-9]\d*$/AD", $_POST['qid']))
         throw new KBException(-100);
     $qid = $_POST['qid'];
     $ans = $db->query("SELECT 1 FROM `question` WHERE `qid`={$qid} LIMIT 1");

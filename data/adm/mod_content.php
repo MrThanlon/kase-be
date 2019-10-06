@@ -4,7 +4,7 @@
  * User: hzy
  * Date: 2019/2/15
  * Time: 11:42
- * 分配材料到材料组
+ * 分配课题到分区
  */
 
 try {
@@ -16,9 +16,13 @@ try {
     if (!key_exists('token', $_COOKIE))
         throw new KBException(-10);
     $jwt = jwt_decode($_COOKIE['token']);
-    if ($jwt['type'] !== 3 || !key_exists('gid', $_POST) || !preg_match("/^\d*?$/AD", $_POST['gid']) ||
-        !key_exists('cid', $_POST) || !preg_match("/^\d*?$/AD", $_POST['cid']))
+    if ($jwt['type'] !== 3 ||
+        !key_exists('gid', $_POST) ||
+        !preg_match("/^\d*?$/AD", $_POST['gid']) ||
+        !key_exists('cid', $_POST) ||
+        !preg_match("/^\d*?$/AD", $_POST['cid']))
         throw new KBException(-100);
+
     $gid = (int)$_POST['gid'];
     $cid = (int)$_POST['cid'];
     //检查cid，材料需要被审核通过了才能分配

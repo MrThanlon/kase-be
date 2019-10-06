@@ -5,6 +5,8 @@
  * Date: 2019/2/14
  * Time: 14:13
  * 拉取材料组
+ *
+ * update: 2019/10/5 修改功能，直接提取分区下的课题和评审
  */
 
 try {
@@ -23,15 +25,51 @@ try {
     if (!preg_match("/^\d*?$/AD", $_POST['pid']))
         throw new KBException(-100);
     $pid = (int)$_POST['pid'];
-    $ans = $db->query("SELECT `gid`,`contents`,`users` FROM `pgroup` WHERE `pid`={$pid}");
-    $data = [];
-    for ($i = $ans->num_rows; $i > 0; $i--) {
-        $d = $ans->fetch_assoc();
-        $d['gid'] = (int)$d['gid'];
-        $d['users'] = (int)$d['users'];
-        $d['contents'] = (int)$d['contents'];
-        $data[] = $d;
-    }
+    $ans = $db->query("SELECT `gid` FROM `pgroup` WHERE `pid`={$pid}");
+    $gids = $ans->fetch_all();
+
+    // 拉取分区下的课题
+    $ans = $db->query("SELECT `cid`,`gid` FROM `content-group` WHERE `gid` IN (SELECT `gid` FROM `pgroup` WHERE `pid`={$pid})");
+    $cg = $ans->fetch_all();
+
+    // 数据结构转换
+    $content_group = array_reduce($cg, function ($pre, $cur) {
+        $pre[(int)$cur[1]][] = (int)$cur[0];
+        return $pre;
+    }, []);
+
+    // 拉取所有评审uid-username
+    $ans = $db->query("SELECT `uid`,`username` FROM `user` WHERE `type`=2");
+    $jugs = $ans->fetch_all();
+
+    // 数据结构转换
+    $jug_username = array_reduce($jugs, function ($pre, $cur) {
+        $pre[(int)$cur[0]] = $cur[1];
+        return $pre;
+    }, []);
+
+    // 拉取分区下的评审
+    $ans = $db->query("SELECT `uid`,`gid` FROM `user-group` WHERE `gid` IN (SELECT `gid` FROM `pgroup` WHERE `pid`={$pid})");
+    $ug = $ans->fetch_all();
+
+    // 数据结构转换
+    $user_group = array_reduce($ug, function ($pre, $cur) {
+        global $jug_username;
+        $pre[(int)$cur[1]][] = $jug_username[(int)$cur[0]];
+        return $pre;
+    }, []);
+
+    // 合成数据
+    $data = array_map(function ($val) {
+        global $user_group;
+        global $content_group;
+        return [
+            'gid' => (int)$val[0],
+            'eva' => $user_group[(int)$val[0]],
+            'content' => $content_group[(int)$val[0]]
+        ];
+    }, $gids);
+
     echo json_encode([
         'status' => 0,
         'msg' => '',

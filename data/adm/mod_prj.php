@@ -18,19 +18,25 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 3)
         throw new KBException(-100);
-    if (!key_exists('pid', $_POST) || !preg_match("/^[1-9]\d*$/AD", $_POST['pid']) ||
-        !key_exists('name', $_POST) || !key_exists('total', $_POST) ||
-        !key_exists('total_only', $_POST) || !preg_match("/^[1-9]\d*$/AD", $_POST['total']) ||
-        ($_POST['total_only'] !== '1' && $_POST['total_only'] !== '2'))
+    if (!key_exists('pid', $_POST) ||
+        !preg_match("/^[1-9]\d*$/AD", $_POST['pid']) ||
+        !key_exists('name', $_POST) ||
+        !key_exists('start', $_POST) ||
+        !key_exists('end', $_POST) ||
+        !preg_match("/^[1-9]\d*$/AD", $_POST['start']) ||
+        !preg_match("/^[1-9]\d*$/AD", $_POST['end']))
         throw new KBException(-100);
+
     $pid = (int)$_POST['pid'];
     $name = $db->escape_string($_POST['name']);
-    $total = (int)$_POST['total'];
-    $total_only = $_POST['total_only'] === '1' ? 1 : 2;
+    $start = (int)$_POST['start'];
+    $end = (int)$_POST['end'];
+
     $ans = $db->query("SELECT 1 FROM `project` WHERE `pid`={$pid}");
     if ($ans->num_rows === 0)
         throw new KBException(-101);
-    $db->query("UPDATE `project` SET `name`='{$name}',`total`={$total},`total_only`={$total_only} WHERE `pid`={$pid} LIMIT 1");
+
+    $db->query("UPDATE `project` SET `name`='{$name}',`start`=FROM_UNIXTIME({$start}),`end`=FROM_UNIXTIME({$end}) WHERE `pid`={$pid} LIMIT 1");
     if ($db->sqlstate !== '00000')
         throw new KBException(-60);
     echo json_encode(['status' => 0, 'msg' => '']);

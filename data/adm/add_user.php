@@ -26,6 +26,7 @@ try {
         throw new KBException(-100);
     if (strlen($_POST['u']) > 20)
         throw new KBException(-100);
+
     $u = $db->escape_string($_POST['u']);
     //检查username是否已经存在
     $ans = $db->query("SELECT 1 FROM `user` WHERE `username`={$u}");

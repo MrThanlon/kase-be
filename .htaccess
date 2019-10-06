@@ -2,5 +2,6 @@
 RewriteEngine On
 RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^([^.]+)$ $1.php [NC,L]
+#RewriteRule ^(.*)$ $1.php [NC,L]
+RewriteRule ^([^.?]+)$ %{REQUEST_URI}.php [L]
 </IfModule>

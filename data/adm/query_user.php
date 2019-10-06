@@ -10,6 +10,15 @@
 try {
     require_once __DIR__ . '/../../include/jwt.php';
     header('Content-type: application/json');
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+        //bad request
+        throw new KBException(-100);
+    if (!key_exists('token', $_COOKIE))
+        throw new KBException(-10);
+    $jwt = jwt_decode($_COOKIE['token']);
+    if ($jwt['type'] !== 3)
+        throw new KBException(-100);
+
     // 拉取评审员username-uid
     $ans = $db->query("SELECT `uid`,`username` FROM `user` WHERE `type`=2");
     $u = $ans->fetch_all();
@@ -29,7 +38,7 @@ try {
     foreach ($u as &$val) {
         $uid = $val[0];
         $username = $val[1];
-        $stat = key_exists($uid, $tables);
+        $stat = key_exists($uid, $tables) ? true : false;
 
         $val = [
             'u' => $username,
