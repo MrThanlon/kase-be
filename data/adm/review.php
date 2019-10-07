@@ -27,8 +27,11 @@ try {
     if ($ans->num_rows === 0)
         throw new KBException(-103);
     $res = $ans->fetch_row();
-    if ($res[0] !== '0')
-        throw new KBException(-111);
+
+    // 允许重复审核
+    //if ($res[0] !== '0')
+    //    throw new KBException(-111);
+
     //执行审核
     $status = $_POST['result'] === '1' ? 1 : -1;
     $name = $res[1];

@@ -29,7 +29,7 @@ try {
 
     $u = $db->escape_string($_POST['u']);
     //检查username是否已经存在
-    $ans = $db->query("SELECT 1 FROM `user` WHERE `username`={$u}");
+    $ans = $db->query("SELECT 1 FROM `user` WHERE `username`='{$u}'");
     if ($ans->num_rows !== 0)
         throw new KBException(-40);
     $p = hash('sha256', $_POST['p'] . HASH_SALT);

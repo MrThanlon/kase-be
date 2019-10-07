@@ -23,7 +23,7 @@ try {
     $cid = (int)$_POST['cid'];
     //检查是否存在关联
     $ans = $db->query("SELECT `id` FROM `content-group` WHERE `cid`={$cid} AND `gid`={$gid} LIMIT 1");
-    if ($ans->num_rows !== 0)
+    if ($ans->num_rows === 0)
         throw new KBException(-100, "Not linking");
 
     //删除

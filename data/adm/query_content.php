@@ -28,7 +28,7 @@ try {
         throw new KBException(-101);
     $data = [];
     //拉取
-    $ans = $db->query("SELECT `name`,`cid`,`applicant`,`uid`,`status` FROM `content` WHERE `pid`={$pid}");
+    $ans = $db->query("SELECT `name`,`cid`,`applicant`,`uid`,`status`,`time` FROM `content` WHERE `pid`={$pid}");
     for ($i = $ans->num_rows; $i > 0; $i--) {
         $data[] = $ans->fetch_assoc();
     }
