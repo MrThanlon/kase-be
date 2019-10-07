@@ -3,7 +3,8 @@
 
 try {
     require_once __DIR__ . '/../../include/jwt.php';
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || $_SERVER['CONTENT_TYPE'] !== 'application/json')
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' ||
+        $_SERVER['CONTENT_TYPE'] !== 'application/json')
         //bad request
         throw new KBException(-100);
     if (!key_exists('token', $_COOKIE))

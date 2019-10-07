@@ -990,7 +990,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 ```json
 {
     URL: "data/adm/download_pdf",
-    method: "POST",
+    method: "GET",
     param: {
         cid: Number //课题编号
     }

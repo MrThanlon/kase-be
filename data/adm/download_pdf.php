@@ -9,7 +9,7 @@
 
 try {
     require_once __DIR__ . '/../../include/jwt.php';
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET')
         //bad request
         throw new KBException(-100);
     if (!key_exists('token', $_COOKIE))
@@ -17,11 +17,11 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 3)
         throw new KBException(-100, "Wrong user type: {$jwt['type']}.");
-    if (!key_exists('cid', $_POST) ||
-        !preg_match("/^[1-9]\d*$/AD", $_POST['cid']))
+    if (!key_exists('cid', $_GET) ||
+        !preg_match("/^[1-9]\d*$/AD", $_GET['cid']))
         throw new KBException(-100);
 
-    $cid = (int)$_POST['cid'];
+    $cid = (int)$_GET['cid'];
     $ans = $db->query("SELECT `pdf_name` FROM `content` WHERE `cid`={$cid} LIMIT 1");
     if ($ans->num_rows === 0)
         throw new KBException(-103);
