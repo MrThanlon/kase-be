@@ -12,7 +12,7 @@ define('DOMAIN', '${CONFIG_DOMAIN}');
 //网站路径，根目录为'/'
 define('PATH', '/');
 //cookie有效期，单位：秒
-define('EXPIRE', 2592000);
+define('EXPIRE', 3600 * 12);
 //文件存储路径
 define('FILE_DIR', "/storage");
 //跨域

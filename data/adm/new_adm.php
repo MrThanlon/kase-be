@@ -32,7 +32,7 @@ try {
 
     $username = $db->escape_string($username);
     //检查username是否已经存在
-    $ans = $db->query("SELECT 1 FROM `user` WHERE `username`={$username}");
+    $ans = $db->query("SELECT 1 FROM `user` WHERE `username`='{$username}'");
     if ($ans->num_rows !== 0)
         throw new KBException(-40);
     $password = hash('sha256', $password . HASH_SALT);
