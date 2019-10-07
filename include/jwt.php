@@ -10,12 +10,13 @@ if (CORS) {
     header('Access-Control-Allow-Origin: ' . CORS);
     header('Access-Control-Allow-Credentials: true');
 }
+ini_set('display_errors', 0);
 
 /**
  * @param string
- * @author hzy
  * @return bool
  * 验证token的签名
+ * @author hzy
  */
 function jwt_check(string $token)
 {
@@ -31,10 +32,10 @@ function jwt_check(string $token)
 
 /**
  * @param string
- * @throws KBException
- * @author hzy
  * @return mixed
  * 解析token
+ * @throws KBException
+ * @author hzy
  */
 function jwt_decode(string $token)
 {
@@ -64,9 +65,9 @@ function jwt_decode(string $token)
 
 /**
  * @param array
- * @author hzy
  * @return string
  * 编码token+签名
+ * @author hzy
  */
 function jwt_encode(array $arr)
 {

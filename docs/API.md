@@ -1351,14 +1351,11 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 {
     URL: "data/adm/download_tables",
     method: "POST/json",
-    param: {
-        pid: Number, //项目id
-      	user: [
-          	"jug1",
-          	"jug2",
-          	...
-        ]
-    }
+    param: [
+      "jug1",
+      "jug2",
+      ...
+    ]
 }
 ```
 
