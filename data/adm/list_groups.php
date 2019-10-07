@@ -63,6 +63,10 @@ try {
     $data = array_map(function ($val) {
         global $user_group;
         global $content_group;
+        if ($user_group[(int)$val[0]] === null)
+            $user_group[(int)$val[0]] = [];
+        if ($content_group[(int)$val[0]] === null)
+            $content_group[(int)$val[0]] = [];
         return [
             'gid' => (int)$val[0],
             'eva' => $user_group[(int)$val[0]],
