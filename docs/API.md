@@ -1167,6 +1167,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     URL: "data/adm/upload_jug",
     method: "POST",
     param: {
+      	pid: Number, //项目编号
     		zip: File //文件
     }
 }
@@ -1181,6 +1182,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     URL: "data/adm/upload_app",
     method: "POST",
     param: {
+      	pid: Number, //项目编号
     		zip: File //文件
     }
 }
