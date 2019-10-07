@@ -11,6 +11,7 @@ try {
     require_once __DIR__ . '/../../include/jwt.php';
     header('Content-type: application/json');
 
+
 } catch (KBException $e) {
     echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
 } catch (Exception $e) {
