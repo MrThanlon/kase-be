@@ -1336,7 +1336,6 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     URL: "data/adm/download_table",
     method: "GET",
     param: {
-        pid: Number, //项目id
         u: Number //评审员账户名
     }
 }
