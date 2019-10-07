@@ -14,7 +14,7 @@ define('PATH', '/');
 //cookie有效期，单位：秒
 define('EXPIRE', 2592000);
 //文件存储路径
-define('FILE_DIR', __DIR__ . "/storage");
+define('FILE_DIR', "/storage");
 //跨域
 define('CORS', '${CONFIG_CORS}');
 
