@@ -42,7 +42,7 @@ try {
     //文件大小
     header("Content-Length: " . filesize($path));
     //触发浏览器文件下载功能，讲道理文件名应该urlencode，然而并不是
-    header("Content-Disposition:attachment;filename=\"{$name}.zip\"");
+    header("Content-Disposition:attachment;filename=\"{$name}\"");
     //循环读取文件内容，并输出
     while (!feof($f)) {
         //从文件指针 handle 读取最多 length 个字节（每次输出10k）
