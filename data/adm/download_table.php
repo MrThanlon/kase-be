@@ -5,7 +5,7 @@
 
 try {
     require_once __DIR__ . '/../../include/jwt.php';
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET')
         //bad request
         throw new KBException(-100);
     if (!key_exists('token', $_COOKIE))
@@ -13,20 +13,22 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 3)
         throw new KBException(-100);
-    if (!key_exists('u', $_POST))
+    if (!key_exists('u', $_GET))
         throw new KBException(-100);
 
-    $u = $_POST['u'];
-    $ans = $db->query("SELECT `name` FROM `tables` WHERE
+    $u = $_GET['u'];
+    $ans = $db->query("SELECT `name`,`uid` FROM `tables` WHERE
                                   `uid`=(SELECT `uid` FROM `user` WHERE `username`='{$u}' AND `type`=2 LIMIT 1) LIMIT 1");
     if ($ans->num_rows === 0)
         throw new KBException(-41);
-    $name = $u . "-" .$ans->fetch_row()[0];
+    $res = $ans->fetch_row();
+    $name = $u . "-" . $res[0];
+
     //清除缓冲区
     ob_clean();
 
     //文件下载
-    $path = FILE_DIR . "/{$u}t";
+    $path = FILE_DIR . "/{$res[1]}t";
     if (!is_file($path) || !is_readable($path))
         //无法读取文件
         throw new KBException(-110);

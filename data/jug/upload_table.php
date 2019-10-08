@@ -33,19 +33,19 @@ try {
     $ans = $db->query("SELECT 1 FROM `tables` WHERE `uid`={$jwt['uid']} LIMIT 1");
     if ($ans->num_rows !== 0)
         throw new KBException(-115, "Uploaded.");
-    $name = $db->escape_string($_FILES['zip']['name']);
+    $name = $db->escape_string($_FILES['file']['name']);
     $db->query("INSERT INTO `tables` (`name`,`uid`) VALUES ('{$name}',{$jwt['uid']})");
-    if ($db->sqlstate !== '00000')
+    if ($db->error)
         throw new KBException(-60);
 
     //保存文件到/<uid>t
     if (!is_dir(FILE_DIR))
         throw new KBException(-107);
-    if (disk_free_space(FILE_DIR) <= $_FILES['zip']['size'])
+    if (disk_free_space(FILE_DIR) <= $_FILES['file']['size'])
         throw new KBException(-104);
     if (!is_writable(FILE_DIR))
         throw new KBException(-105);
-    if (!move_uploaded_file($_FILES['zip']['tmp_name'], FILE_DIR . "/{$jwt['uid']}t"))
+    if (!move_uploaded_file($_FILES['file']['tmp_name'], FILE_DIR . "/{$jwt['uid']}t"))
         throw new KBException(-106);
 
     //响应
