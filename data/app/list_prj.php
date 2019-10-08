@@ -18,7 +18,10 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 1)
         throw new KBException(-100);
-    $ans = $db->query("SELECT `pid`,`name` FROM `project`");
+    $ans = $db->query("SELECT `pid`,`name` FROM `project` WHERE
+                                         `start`<=CURRENT_TIMESTAMP AND
+                                         `end`>=CURRENT_TIMESTAMP");
+
     $data = [];
     for ($i = $ans->num_rows; $i > 0; $i--) {
         $d = $ans->fetch_assoc();

@@ -33,20 +33,19 @@ try {
     //    throw new KBException(-111);
 
     //执行审核
-    $status = $_POST['result'] === '1' ? 1 : -1;
+    $status = (int)$_POST['result'];
     $name = $res[1];
     $uid = (int)$res[2];
     $pid = (int)$res[3];
     $db->query("UPDATE `content` SET `status`={$status} WHERE `cid`={$cid}");
-    //更新project表，passed字段+1
-    if ($status === 1)
-        $db->query("UPDATE `project` SET `passed`=`passed`+1 WHERE `pid`={$pid} LIMIT 1");
     if ($db->sqlstate !== '00000')
         throw new KBException(-60);
+
     //TODO:短信通知
     $ans = $db->query("SELECT `username` FROM `user` WHERE `uid`={$uid} LIMIT 1");
     $res = $ans->fetch_row();
     //snotice($status === 1, $cid, $name, $res[0]);
+
     //响应
     echo json_encode(['status' => 0, 'msg' => '']);
 

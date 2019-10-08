@@ -18,7 +18,7 @@ try {
         !key_exists('u', $_POST))
         throw new KBException(-100);
 
-    $gid = (int)$gid;
+    $gid = (int)$_POST['gid'];
     $u = $_POST['u'];
 
     // 检查是否存在

@@ -276,7 +276,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
         	pid: Number, //隶属于的项目的编号
         	applicant: String, //申请人
         	tel: String, //申请人手机号
-        	status: Number, //材料状态，0->未审核，1->已过审，-1->审核未通过
+        	status: Number, //材料状态，0->未审核，1->已过审，2->审核未通过
           pid: Number, //所属项目
           time: String, //日期,YYYY-MM-DD HH:mm:SS
           pdf: Boolean, //是否有文档
@@ -973,8 +973,8 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
             name: String, //项目名称
             cid: Number, //材料编号
             applicant: String, //申请人
-            uid: String, //申请人手机号
-            status: Number //材料状态，0->未审核，1->已过审，-1->审核未通过
+            status: Number, //材料状态，0->未审核，1->已过审，2->审核未通过
+          	time: String //申报时间，字符串形式
         },
         ...
     ]
@@ -1188,7 +1188,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 评审员列表
+#### 拉取评审员列表
 
 @request
 
@@ -1431,5 +1431,20 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
+#### 课题批量导入(未完成)
 
+压缩包中的格式为`申请人/课题名称.pdf`，如果有附件则附件为`申请人/课题名称.zip`，不接受其他格式。如果解析失败则不能导入。对于这种方式导入的课题，数据库中的`uid`字段为管理员`uid`。
+
+@request
+
+```json
+{
+  	URL: "data/adm/import",
+  	method: "POST/form-data",
+  	param: {
+      	pid: Number, // 项目编号
+      	zip: File // 压缩包
+    }
+}
+```
 

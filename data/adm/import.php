@@ -1,10 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: hzy
- * Date: 2019/2/14
- * Time: 14:50
- * 拉取项目下的申报材料列表
+ * 上传申报材料
  */
 
 try {
@@ -18,27 +14,29 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 3 ||
         !key_exists('pid', $_POST) ||
-        !preg_match("/^\d*?$/AD", $_POST['pid']))
+        !preg_match("/^\d*?$/AD", $_POST['pid']) ||
+        !isset($_FILES) ||
+        !key_exists('zip', $_FILES))
         throw new KBException(-100);
 
-    $pid = (int)$_POST['pid'];
     //检查pid
-    $ans = $db->query("SELECT 1 FROM `project` WHERE `pid`={$pid}");
+    $pid = (int)$_POST['pid'];
+    $ans = $db->query("SELECT 1 FROM `project` WHERE
+                              `pid`={$pid} AND
+                              `start`=<CURRENT_TIMESTAMP AND
+                              `end`>=CURRENT_TIMESTAMP");
     if ($ans->num_rows === 0)
         throw new KBException(-101);
-    $data = [];
-    //拉取
-    $ans = $db->query("SELECT `name`,`cid`,`applicant`,`status`,`time` FROM `content` WHERE `pid`={$pid}");
-    for ($i = $ans->num_rows; $i > 0; $i--) {
-        $d = $ans->fetch_assoc();
-        $d['cid'] = (int)$d['cid'];
-        $d['status'] = (int)$d['status'];
-        $data[] = $d;
-    }
+
+    //读取zip
+    $zip = new ZipArchive;
+    if ($zip->open($_FILES['zip']['tmp_name']) !== true)
+        throw new KBException(-109);
+
+
     echo json_encode([
         'status' => 0,
-        'msg' => '',
-        'data' => $data
+        'msg' => ''
     ]);
 
 } catch (KBException $e) {

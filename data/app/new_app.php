@@ -27,9 +27,13 @@ try {
     //检测是否存在此pid，pid为纯数字
     if (!preg_match("/^\d*?$/AD", $_POST['pid']))
         throw new KBException(-101);
-    $ans = $db->query("SELECT 1 FROM `project` WHERE `pid`={$_POST['pid']}");
+    $ans = $db->query("SELECT 1 FROM `project` WHERE
+                              `pid`={$_POST['pid']} AND
+                              `start`=<CURRENT_TIMESTAMP AND
+                              `end`>=CURRENT_TIMESTAMP");
     if ($ans->num_rows === 0)
         throw new KBException(-101);
+
     //插入content
     //SQL过滤
     $name = $db->escape_string($_POST['name']);
