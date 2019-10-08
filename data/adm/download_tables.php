@@ -26,10 +26,11 @@ try {
     $tn = $ans->fetch_all();
 
     // 拉取username-uid
-    $ans = $db->query("SELECT `username`,`uid` FROM `user` WHERE `uid` IN ({$sql})");
+    $ans = $db->query("SELECT `username`,`uid` FROM `user` WHERE `username` IN ({$sql})");
     $u = $ans->fetch_all();
     $usernames = array_reduce($u, function ($pre, $cur) {
         $pre[(int)$cur[1]] = $cur[0];
+        return $pre;
     }, []);
 
     //检查文件大小
@@ -50,7 +51,7 @@ try {
     $zip = new ZipArchive;
     $zip->open($path, ZipArchive::CREATE);
     foreach ($tn as $val) {
-        if ($zip->addFile(FILE_DIR . "/{$val[1]}t", $usernames[$val[1]] . "-" . $val[0])) {
+        if (!$zip->addFile(FILE_DIR . "/{$val[1]}t", $usernames[$val[1]] . "-" . $val[0])) {
             $zip->close();
             unlink($path);
             throw new KBException(-200, "Failed to zip {$usernames[$val[1]]} file, name: {$val[0]}");
