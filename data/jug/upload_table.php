@@ -23,6 +23,13 @@ try {
         !preg_match("/^[1-9]\d*$/AD", $_POST['pid']) ||
         !key_exists('file', $_FILES))
         throw new KBException(-100);
+
+    // 文件名过滤
+    foreach (['/', '\\', ':', '*', '"', '<', '>', '|', '?'] as $val) {
+        if (strpos($_FILES['file']['name'], $val) !== false)
+            throw new KBException(-50);
+    }
+
     $pid = (int)$_POST['pid'];
     //检查pid关联
     $ans = $db->query("SELECT 1 FROM `user-project` WHERE `pid`={$pid} AND `uid`={$jwt['uid']} LIMIT 1");
@@ -30,13 +37,18 @@ try {
         throw new KBException(-101);
 
     //更新数据库
-    $ans = $db->query("SELECT 1 FROM `tables` WHERE `uid`={$jwt['uid']} LIMIT 1");
-    if ($ans->num_rows !== 0)
-        throw new KBException(-115, "Uploaded.");
+    //允许重复上传覆盖
     $name = $db->escape_string($_FILES['file']['name']);
-    $db->query("INSERT INTO `tables` (`name`,`uid`) VALUES ('{$name}',{$jwt['uid']})");
+    $ans = $db->query("SELECT 1 FROM `tables` WHERE `uid`={$jwt['uid']} LIMIT 1");
+    if ($ans->num_rows === 0) {
+        $db->query("INSERT INTO `tables` (`name`,`uid`) VALUES ('{$name}',{$jwt['uid']})");
+        if ($db->affected_rows === 0)
+            throw new KBException(-60, $db->error);
+    } else {
+        $db->query("UPDATE `tables` SET `name`='{$name}',`time`=CURRENT_TIMESTAMP WHERE `uid`={$jwt['uid']} LIMIT 1");
+    }
     if ($db->error)
-        throw new KBException(-60);
+        throw new KBException(-60, $db->error);
 
     //保存文件到/<uid>t
     if (!is_dir(FILE_DIR))

@@ -33,7 +33,7 @@ try {
     //保存文件名
     $ans = $db->query("UPDATE `project` SET `app`='{$_FILES['zip']['name']}' WHERE `pid`={$pid}");
     if ($db->error || $db->affected_rows === 0)
-        throw new KBException(-60);
+        throw new KBException(-60, $db->error);
 
     // 文件名过滤
     foreach (['/', '\\', ':', '*', '"', '<', '>', '|', '?'] as $val) {

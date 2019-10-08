@@ -23,6 +23,7 @@ try {
     if (!key_exists('file', $_FILES))
         //没有文件上传个毛
         throw new KBException(-100);
+
     // 文件名过滤
     foreach (['/', '\\', ':', '*', '"', '<', '>', '|', '?'] as $val) {
         if (strpos($_FILES['file']['name'], $val) !== false)
@@ -32,7 +33,7 @@ try {
     //保存文件名
     $ans = $db->query("UPDATE `project` SET `tables`='{$_FILES['file']['name']}' WHERE `pid`={$pid}");
     if ($db->error || $db->affected_rows === 0)
-        throw new KBException(-60);
+        throw new KBException(-60, $db->error);
 
     //保存文件，存储到 /table
     if (!is_dir(FILE_DIR))
