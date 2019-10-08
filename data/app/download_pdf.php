@@ -31,6 +31,7 @@ try {
         throw new KBException(-103);
     //清除缓冲区
     ob_clean();
+
     //读取文件名
     $name = $res[1];
     $path = FILE_DIR . "/{$cid}p";

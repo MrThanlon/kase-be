@@ -386,26 +386,19 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 }
 ```
 
-#### 拉取通知信息
+#### 下载申报材料
 
-放在申报页的内容。
+如果正常，直接下载文件，响应值不是JSON格式而是二进制文件流。
 
 @request
 
 ```json
 {
     URL: "data/app/notice",
-    method: "POST"
-}
-```
-
-@return
-
-```json
-{
-    status_code: Number,
-    msg: String,
-    content: String //内容
+    method: "GET",
+  	param: {
+      	pid: Number //项目编号
+    }
 }
 ```
 
@@ -516,24 +509,16 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 ### 审核员
 
-#### 拉取通知信息
+#### 下载评审材料
+
+如果正常，直接下载文件，响应值不是JSON格式而是二进制文件流。
 
 @request
 
 ```json
 {
     URL: "data/jug/notice",
-    method: "POST"
-}
-```
-
-@return
-
-```json
-{
-    status_code: Number,
-    msg: String,
-    content: String //内容
+    method: "GET"
 }
 ```
 

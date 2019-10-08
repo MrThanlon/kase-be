@@ -29,6 +29,7 @@ try {
     $res = $ans->fetch_row();
     if ($res[0] !== (string)$jwt['uid'])
         throw new KBException(-103);
+
     //清除缓冲区
     ob_clean();
     //读取文件名

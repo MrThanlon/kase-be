@@ -36,6 +36,11 @@ try {
             throw new KBException(-50);
     }
 
+    //保存文件名
+    $db->query("UPDATE `project` SET `jug`='{$_FILES['zip']['name']}' WHERE `pid`={$pid}");
+    if ($db->error || $db->affected_rows === 0)
+        throw new KBException(-60);
+
     //保存文件，存储到 /<pid>jug
     if (!is_dir(FILE_DIR))
         throw new KBException(-107);

@@ -20,24 +20,28 @@ try {
         throw new KBException(-100);
     if (!isset($_FILES))
         throw new KBException(-100);
-    if (!key_exists('zip', $_FILES))
+    if (!key_exists('file', $_FILES))
         //没有文件上传个毛
         throw new KBException(-100);
     // 文件名过滤
     foreach (['/', '\\', ':', '*', '"', '<', '>', '|', '?'] as $val) {
-        if (strpos($_FILES['zip']['name'], $val) !== false)
+        if (strpos($_FILES['file']['name'], $val) !== false)
             throw new KBException(-50);
     }
 
+    //保存文件名
+    $ans = $db->query("UPDATE `project` SET `tables`='{$_FILES['file']['name']}' WHERE `pid`={$pid}");
+    if ($db->error || $db->affected_rows === 0)
+        throw new KBException(-60);
 
     //保存文件，存储到 /table
     if (!is_dir(FILE_DIR))
         throw new KBException(-107);
-    if (disk_free_space(FILE_DIR) <= $_FILES['zip']['size'])
+    if (disk_free_space(FILE_DIR) <= $_FILES['file']['size'])
         throw new KBException(-104);
     if (!is_writable(FILE_DIR))
         throw new KBException(-105);
-    if (!move_uploaded_file($_FILES['zip']['tmp_name'], FILE_DIR . "/table"))
+    if (!move_uploaded_file($_FILES['file']['tmp_name'], FILE_DIR . "/table"))
         throw new KBException(-106);
     echo json_encode([
         'status' => 0,
