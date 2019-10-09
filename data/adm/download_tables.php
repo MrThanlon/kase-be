@@ -3,18 +3,31 @@
 
 try {
     require_once __DIR__ . '/../../include/jwt.php';
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST' ||
-        $_SERVER['CONTENT_TYPE'] !== 'application/json')
-        //bad request
-        throw new KBException(-100);
+
     if (!key_exists('token', $_COOKIE))
         throw new KBException(-10);
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 3)
         throw new KBException(-100);
 
-    $postjson = file_get_contents("php://input");
-    $data = json_decode($postjson, false);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
+        $_SERVER['CONTENT_TYPE'] === 'application/json') {
+        // 从json解析数据
+        $postjson = file_get_contents("php://input");
+        $data = json_decode($postjson, false);
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        // 从URL参数解析数据
+        $url = parse_url($_SERVER['REQUEST_URI']);
+        $query = explode('&', $url['query']);
+        $data = array_reduce($query, function ($pre, $cur) {
+            if (substr($cur, 0, 5) === "user=") {
+                $pre[] = substr($cur, 5);
+                return $pre;
+            } else
+                return $pre;
+        }, []);
+    } else
+        throw new KBException(-100);
 
     // 检查是否上传评分表
     $num = sizeof($data);

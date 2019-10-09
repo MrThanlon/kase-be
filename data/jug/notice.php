@@ -24,9 +24,11 @@ try {
                                         `pid`=(SELECT `pid` FROM `user-project` WHERE `uid`={$jwt['uid']} LIMIT 1) LIMIT 1");
     if ($ans->num_rows === 0)
         throw new KBException(-100, "Judger not assign to project");
-    $res = $ans->fetch_row()[0];
+    $res = $ans->fetch_row();
     $pid = $res[0];
     $name = $res[1];
+    if (!$name)
+        throw new KBException(-100, "No file");
 
     //清除缓冲区
     ob_clean();
@@ -35,10 +37,10 @@ try {
     $path = FILE_DIR . "/{$pid}jug";
     if (!is_file($path) || !is_readable($path))
         //无法读取文件
-        throw new KBException(-110);
+        throw new KBException(-110, $path);
     $f = fopen($path, 'rb');
     if ($f === false)
-        throw new KBException(-110);
+        throw new KBException(-110, $path);
     //文件类型是二进制流，设置为utf8编码（支持中文文件名称）
     header('Content-type:application/octet-stream; charset=utf-8');
     header("Content-Transfer-Encoding: binary");
@@ -56,7 +58,7 @@ try {
     fclose($f);
 
 } catch (KBException $e) {
-    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
+    //echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
 } catch (Exception $e) {
-    echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
+    //echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
 }

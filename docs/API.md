@@ -622,9 +622,6 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 {
     URL: "data/jug/download_table",
     method: "GET",
-    param: {
-        pid: Number //项目id
-    }
 }
 ```
 
@@ -1330,6 +1327,8 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 #### 批量下载评审员的打分表
 
+支持两种请求方式。
+
 如果正常，直接下载文件，响应值不是JSON格式而是二进制文件流。如果没有则响应为空。
 
 @request
@@ -1337,12 +1336,17 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 ```json
 {
     URL: "data/adm/download_tables",
-    method: "POST/json",
-    param: [
+    method: "POST/json or GET",
+    param1: [
       "jug1",
       "jug2",
       ...
-    ]
+    ],
+    param2: {
+    		user: "jug1",
+      	user: "jug2",
+      	...
+    }
 }
 ```
 
