@@ -19,9 +19,7 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 2)
         throw new KBException(-100);
-    if (!key_exists('pid', $_POST) ||
-        !preg_match("/^[1-9]\d*$/AD", $_POST['pid']) ||
-        !key_exists('file', $_FILES))
+    if (!key_exists('file', $_FILES))
         throw new KBException(-100);
 
     // 文件名过滤
@@ -30,11 +28,12 @@ try {
             throw new KBException(-50);
     }
 
-    $pid = (int)$_POST['pid'];
-    //检查pid关联
-    $ans = $db->query("SELECT 1 FROM `user-project` WHERE `pid`={$pid} AND `uid`={$jwt['uid']} LIMIT 1");
+    //查找pid
+    $ans = $db->query("SELECT `pid` FROM `user-project` WHERE `uid`={$jwt['uid']} LIMIT 1");
     if ($ans->num_rows === 0)
         throw new KBException(-101);
+
+    $pid = (int)$ans->fetch_row()[0];
 
     //更新数据库
     //允许重复上传覆盖

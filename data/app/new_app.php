@@ -29,7 +29,7 @@ try {
         throw new KBException(-101);
     $ans = $db->query("SELECT 1 FROM `project` WHERE
                               `pid`={$_POST['pid']} AND
-                              `start`=<CURRENT_TIMESTAMP AND
+                              `start`<=CURRENT_TIMESTAMP AND
                               `end`>=CURRENT_TIMESTAMP");
     if ($ans->num_rows === 0)
         throw new KBException(-101);

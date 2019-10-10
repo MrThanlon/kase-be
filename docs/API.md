@@ -636,7 +636,6 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     URL: "data/jug/upload_table",
     method: "POST",
     param: {
-        pid: Number, //项目id
         file: File //打分表文件
     }
 }
@@ -1422,7 +1421,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 #### 课题批量导入(未完成)
 
-压缩包中的格式为`申请人/课题名称.pdf`，如果有附件则附件为`申请人/课题名称.zip`，不接受其他格式。如果解析失败则不能导入。对于这种方式导入的课题，数据库中的`uid`字段为管理员`uid`。
+压缩包中的格式为`申请人/课题名称/文件.pdf`，如果有附件则附件为`申请人/课题名称/文件.zip`，不接受其他格式。如果解析失败则不能导入。对于这种方式导入的课题，数据库中的`uid`字段为管理员`uid`。
 
 @request
 
