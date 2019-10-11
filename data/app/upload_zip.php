@@ -32,24 +32,39 @@ try {
         if (strpos($_FILES['zip']['name'], $val) !== false)
             throw new KBException(-50);
     }
+
     //查找是否存在cid
     $cid = $_POST['cid'];
     if (!preg_match("/^\d*?$/AD", $cid))
         throw new KBException(-100);
-    $ans = $db->query("SELECT `zip_name` FROM `content` WHERE `cid`={$cid} LIMIT 1");
+    $ans = $db->query("SELECT `zip_name`,`pid`,`status` FROM `content` WHERE `cid`={$cid} LIMIT 1");
     if ($ans->num_rows === 0)
         throw new KBException(-103);
     $res = $ans->fetch_row();
     if ($res[0] !== null)
         throw new KBException(-100);
+    $status = (int)$res[2];
+    if ($status === 1)
+        throw new KBException(-103, "Content passed");
+
+    // 检查时间
+    $pid = (int)$res[1];
+    $ans = $db->query("SELECT 1 FROM `project` WHERE
+                              `pid`={$pid} AND
+                              `start`<=CURRENT_TIMESTAMP AND
+                              `end`>=CURRENT_TIMESTAMP");
+    if ($ans->num_rows === 0)
+        throw new KBException(-103, "Time exceeded");
+
     //检查zip文件是否正常
     $zip = new ZipArchive;
     if ($zip->open($_FILES['zip']['tmp_name']) !== true)
         throw new KBException(-109);
     $zip->close();
+
     //更新zip_name
     $name = $db->escape_string(substr($_FILES['zip']['name'], 0, -4));
-    $db->query("UPDATE `content` SET `zip_name`='{$name}' WHERE `cid`={$cid}");
+    $db->query("UPDATE `content` SET `zip_name`='{$name}',`status`=0 WHERE `cid`={$cid}");
     //保存文件
     if (!is_dir(FILE_DIR))
         throw new KBException(-107);

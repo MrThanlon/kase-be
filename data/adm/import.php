@@ -71,18 +71,18 @@ try {
                 // 解析文件
                 if (substr($file, -4) === ".pdf") {
                     try {
-                        $parser->parseFile($path . "/" . $app . "/" . $name);
+                        $parser->parseFile($path . "/" . $app . "/" . $name . "/" . $file);
                     } catch (Exception $e) {
                         throw new KBException(-110, "Can not parse file");
                     }
-                    $applicant[$app][$name]['pdf'] = $file;
-                    $pdf_sql = "'{$file}'";
+                    $applicant[$app][$name]['pdf'] = substr($file, 0, -4);
+                    $pdf_sql = "'{$applicant[$app][$name]['pdf']}'";
                 } elseif (substr($file, -4) === ".zip") {
-                    if (!$z2->open($path . "/" . $app . "/" . $name))
+                    if (!$z2->open($path . "/" . $app . "/" . $name . "/" . $file))
                         throw new KBException(-110, "Can not parse file");
                     $z2->close();
-                    $applicant[$app][$name]['zip'] = $file;
-                    $zip_sql = "'{$file}'";
+                    $applicant[$app][$name]['zip'] = substr($file, 0, -4);
+                    $zip_sql = "'{$applicant[$app][$name]['zip']}'";
                 } else {
                     throw new KBException(-110, "Can not parse file");
                 }
@@ -92,10 +92,33 @@ try {
     }
 
     $sql = implode(",", $sqls);
+    $num = sizeof($sqls);
     // 插入
     $db->query("INSERT INTO `content` (`name`,`pid`,`applicant`,`status`,`uid`,`pdf_name`,`zip_name`) VALUES {$sql}");
     if ($db->affected_rows === 0)
         throw new KBException(-60);
+
+    //保存文件
+    if (!is_dir(FILE_DIR))
+        throw new KBException(-107);
+    //FIXME: 准确判断文件大小
+    if (disk_free_space(FILE_DIR) <= $_FILES['zip']['size'])
+        throw new KBException(-104);
+    if (!is_writable(FILE_DIR))
+        throw new KBException(-105);
+
+    $cid = $db->insert_id;
+    foreach ($applicant as $app => $names) {
+        foreach ($names as $name => $file) {
+            if (isset($file['pdf'])) {
+                rename("{$path}/{$app}/{$name}/{$file['pdf']}.pdf", FILE_DIR . "/{$cid}p");
+            }
+            if (isset($file['zip'])) {
+                rename("{$path}/{$app}/{$name}/{$file['zip']}.zip", FILE_DIR . "/{$cid}z");
+            }
+            $cid += 1;
+        }
+    }
 
     echo json_encode([
         'status' => 0,
@@ -109,16 +132,6 @@ try {
     echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
 } finally {
     if (isset($path)) {
-        function del($p)
-        {
-            if (is_dir($p)) {
-                foreach (scandir($p) as $v) {
-                    del($v);
-                }
-            } else
-                unlink($p);
-        }
-
-        del($path);
+        unlink($path);
     }
 }

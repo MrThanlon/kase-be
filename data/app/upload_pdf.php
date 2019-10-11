@@ -35,25 +35,39 @@ try {
         if (strpos($_FILES['pdf']['name'], $val) !== false)
             throw new KBException(-50);
     }
+
     //查找是否存在cid
     $cid = $_POST['cid'];
     if (!preg_match("/^\d*?$/AD", $cid))
         throw new KBException(-100);
-    $ans = $db->query("SELECT `pdf_name` FROM `content` WHERE `cid`={$cid} LIMIT 1");
+    $ans = $db->query("SELECT `pdf_name`,`pid`,`status` FROM `content` WHERE `cid`={$cid} LIMIT 1");
     if ($ans->num_rows === 0)
         throw new KBException(-103);
     $res = $ans->fetch_row();
-    if ($res[0] !== null)
-        throw new KBException(-100);
+    $status = (int)$res[2];
+    if ($status === 1)
+        throw new KBException(-103, "Content passed");
+
+    // 检查时间
+    $pid = (int)$res[1];
+    $ans = $db->query("SELECT 1 FROM `project` WHERE
+                              `pid`={$pid} AND
+                              `start`<=CURRENT_TIMESTAMP AND
+                              `end`>=CURRENT_TIMESTAMP");
+    if ($ans->num_rows === 0)
+        throw new KBException(-103, "Time exceeded");
+
     //检查pdf文件是否正常
     try {
         $pdf = $parser->parseFile($_FILES['pdf']['tmp_name']);
     } catch (Exception $e) {
         throw new KBException(-108);
     }
+
     //更新pdf_name
     $name = $db->escape_string(substr($_FILES['pdf']['name'], 0, -4));
-    $ans = $db->query("UPDATE `content` SET `pdf_name`='{$name}' WHERE `cid`={$cid}");
+    $ans = $db->query("UPDATE `content` SET `pdf_name`='{$name}',`status`=0 WHERE `cid`={$cid}");
+
     //保存文件
     if (!is_dir(FILE_DIR))
         throw new KBException(-107);
