@@ -18,17 +18,17 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 3)
         throw new KBException(-100, "Wrong user type: {$jwt['type']}.");
-    $ans = $db->query("SELECT `name`,`pid`,`groups`,`contents`,UNIX_TIMESTAMP(start),UNIX_TIMESTAMP(end) FROM `project`");
+    $ans = $db->query("SELECT `name`,`pid`,`groups`,`contents`,UNIX_TIMESTAMP(`start`),UNIX_TIMESTAMP(`end`) FROM `project`");
     $data = [];
     for ($i = $ans->num_rows; $i > 0; $i--) {
         $d = $ans->fetch_assoc();
         $d['pid'] = (int)$d['pid'];
         $d['groups'] = (int)$d['groups'];
         $d['contents'] = (int)$d['contents'];
-        $d['start'] = (int)$d['UNIX_TIMESTAMP(start)'];
-        $d['end'] = (int)$d['UNIX_TIMESTAMP(end)'];
-        unset($d['UNIX_TIMESTAMP(start)']);
-        unset($d['UNIX_TIMESTAMP(end)']);
+        $d['start'] = (int)$d['UNIX_TIMESTAMP(`start`)'];
+        $d['end'] = (int)$d['UNIX_TIMESTAMP(`end`)'];
+        unset($d['UNIX_TIMESTAMP(`start`)']);
+        unset($d['UNIX_TIMESTAMP(`end`)']);
         $data[] = $d;
     }
     echo json_encode([

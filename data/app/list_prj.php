@@ -18,14 +18,16 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 1)
         throw new KBException(-100);
-    $ans = $db->query("SELECT `pid`,`name` FROM `project` WHERE
-                                         `start`<=CURRENT_TIMESTAMP AND
-                                         `end`>=CURRENT_TIMESTAMP");
+    $ans = $db->query("SELECT `pid`,`name`,UNIX_TIMESTAMP(`start`),UNIX_TIMESTAMP(`end`) FROM `project`");
 
     $data = [];
     for ($i = $ans->num_rows; $i > 0; $i--) {
         $d = $ans->fetch_assoc();
         $d['pid'] = (int)$d['pid'];
+        $d['start'] = (int)$d['UNIX_TIMESTAMP(`start`)'];
+        $d['end'] = (int)$d['UNIX_TIMESTAMP(`end`)'];
+        unset($d['UNIX_TIMESTAMP(`start`)']);
+        unset($d['UNIX_TIMESTAMP(`end`)']);
         $data[] = $d;
     }
     echo json_encode([

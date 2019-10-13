@@ -45,8 +45,6 @@ try {
         throw new KBException(-103);
     $res = $ans->fetch_row();
     $status = (int)$res[2];
-    if ($status === 1)
-        throw new KBException(-103, "Content passed");
 
     // 检查时间
     $pid = (int)$res[1];

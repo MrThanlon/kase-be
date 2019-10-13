@@ -44,8 +44,6 @@ try {
     if ($res[0] !== null)
         throw new KBException(-100);
     $status = (int)$res[2];
-    if ($status === 1)
-        throw new KBException(-103, "Content passed");
 
     // 检查时间
     $pid = (int)$res[1];
