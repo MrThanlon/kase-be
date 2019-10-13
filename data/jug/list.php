@@ -29,6 +29,7 @@ try {
             'msg' => '',
             'data' => []
         ]);
+        exit;
     }
     foreach ($res as &$v1) {
         $v1 = (int)$v1[0];
