@@ -37,8 +37,8 @@ try {
         throw new KBException(-101);
 
     $db->query("UPDATE `project` SET `name`='{$name}',`start`=FROM_UNIXTIME({$start}),`end`=FROM_UNIXTIME({$end}) WHERE `pid`={$pid} LIMIT 1");
-    if ($db->sqlstate !== '00000')
-        throw new KBException(-60);
+    if ($db->error)
+        throw new KBException(-60, $db->error);
     echo json_encode(['status' => 0, 'msg' => '']);
 
 } catch (KBException $e) {
