@@ -1292,7 +1292,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 ```json
 {
-    URL: "data/jug/upload_table",
+    URL: "data/adm/upload_table",
     method: "POST",
     param: {
         pid: Number, //项目id
