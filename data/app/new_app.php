@@ -48,12 +48,13 @@ try {
     if ($db->sqlstate !== '00000')
         //插入失败
         throw new KBException(-60);
+    $cid = $db->insert_id;
     //更新
     $db->query("UPDATE `project` SET `contents`=`contents`+1 WHERE `pid`={$_POST['pid']} LIMIT 1");
     echo json_encode([
         'status' => 0,
         'msg' => '',
-        'cid' => $db->insert_id
+        'cid' => $cid
     ]);
 
 } catch (KBException $e) {
