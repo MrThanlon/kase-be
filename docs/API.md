@@ -120,8 +120,8 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 ```json
 {
-	status: Number,
-	msg: String
+		status: Number,
+		msg: String
 }
 ```
 
@@ -147,8 +147,8 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 ```json
 {
-	status_code: Number,
-	msg: String
+		status_code: Number,
+		msg: String
 }
 ```
 
@@ -206,7 +206,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 
 ### 请求注册账户
 
-如果手机号没有注册，可以请求此接口，系统会发送一条包含注册链接(等于验证码登录)的短信到提交的手机上。如果该手机号已经注册，则不会发送，并且响应为失败。不需要cookie。如果请求注册成功，则会设置cookie，此时账户status为0，需要设置密码才能启用。如果不慎丢失cookie，请使用短信验证码登录。
+如果手机号没有注册，可以请求此接口，系统会发送一条验证码短信到提交的手机上，直接使用这个验证码请求无密码登录接口即可登录。如果该手机号已经注册，则不会发送，并且响应为失败。不需要cookie。如果请求注册成功，则会设置cookie，此时账户status为0，需要设置密码才能启用。如果不慎丢失cookie，请使用短信验证码登录。
 
 @request
 
