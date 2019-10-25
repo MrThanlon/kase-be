@@ -9,6 +9,7 @@
 
 try {
     require_once __DIR__ . '/../include/jwt.php';
+    require_once __DIR__ . '/../include/sms.php';
     header('Content-type: application/json');
     if ($_SERVER['REQUEST_METHOD'] !== 'POST' ||
         !key_exists('token', $_POST) || !key_exists('u', $_POST) ||
@@ -16,32 +17,29 @@ try {
         !preg_match("/^1[3|5|7|8]\d{9}$/AD", $_POST['u'])) //匹配手机号
         //bad request
         throw new KBException(-100);
-    //查找数据库
-    $ans = $db->query("SELECT `token`,`expire`,`valid`,`tid` FROM `token` WHERE `username`={$_POST['u']} ORDER BY `tid` DESC LIMIT 1");
-    if ($ans->num_rows === 0)
-        throw new KBException(-30);
-    $res = $ans->fetch_row();
-    //关于表结构，valid,1.未使用，2.已使用
-    if ($res[0] !== hash('sha256', $_POST['token'] . HASH_SALT) || (int)$res[1] > time() || $res[2] !== '1')
+    if (!key_exists('sms_token', $_COOKIE))
         throw new KBException(-12);
-    //正常，更新token，设置cookie并响应
-    $db->query("UPDATE `token` SET `valid`=2 WHERE `tid`={$res[3]} LIMIT 1");
-    if ($db->sqlstate != '00000')
-        throw new KBException(-60);
+
+    //验证码校验
+    sms_check($_COOKIE['sms_token'], $_POST['u'], $_POST['token'], 'login');
+
     //查询用户信息
-    $ans = $db->query("SELECT `uid`,`version`,`type` FROM `user` WHERE `username`={$_POST['u']} LIMIT 1");
+    $ans = $db->query("SELECT `uid`,`version`,`type` FROM `user` WHERE `username`='{$_POST['u']}' AND (`type`=1 OR `type`=0) LIMIT 1");
     if ($ans->num_rows === 0)
-        throw new KBException(-60);//讲道理不应该
+        throw new KBException(-200,"System error, failed to query user");//讲道理不应该
     $res = $ans->fetch_row();
     $uid = (int)$res[0];
-    $ver = (int)$res[1];
+    $version = (int)$res[1];
+    $type = (int)$res[2];
+
     //更新last_login
-    $db->query("UPDATE `user` SET `last_login`=CURRENT_TIMESTAMP WHERE `uid`={$uid} LIMIT 1");
+    $db->query("UPDATE `user` SET `last_login`=CURRENT_TIMESTAMP,`type`=1 WHERE `uid`={$uid} LIMIT 1");
+    //登录成功
     $jwt = [
         'u' => $_POST['u'],
         'uid' => $uid,
-        'type' => (int)$res[2],
-        'version' => $ver,
+        'type' => $type,
+        'version' => $version,
         'expire' => time() + EXPIRE,
         'born' => time()
     ];
