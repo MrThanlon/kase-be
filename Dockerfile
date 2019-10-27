@@ -5,6 +5,8 @@ COPY ./ /build/
 RUN set -xe;\
     cd /build;\
     cp nginx.conf /etc/nginx/conf.d/;\
+    sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories;\
+    apk add git;\
     curl -o /usr/local/bin/composer https://getcomposer.org/download/1.9.0/composer.phar;\
     chmod +x /usr/local/bin/composer;\
     composer install -v;\
@@ -17,4 +19,5 @@ RUN set -xe;\
     cd /;\
     mv /build /app;\
     mkdir /storage;\
+    apk del git;\
     chmod 0777 /storage
