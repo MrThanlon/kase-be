@@ -137,7 +137,8 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     method: "POST",
     param: {
       u: Number, //手机号
-    	token: String
+    	token: String, //验证码
+      password: String //新密码
     }
 }
 ```
