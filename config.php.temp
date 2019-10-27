@@ -22,15 +22,15 @@ define('CORS', '${CONFIG_CORS}');
 //短信有效期，单位：秒
 define('SMS_PERIOD', 300);
 //SDK AppID
-define('SMS_APPID', 9700);
+define('SMS_APPID', 1400181596);
 //App Key
-define('SMS_APPKEY', 'App key');
+define('SMS_APPKEY', '${CONFIG_SMSKEY}');
 //短信验证码模板ID，只需要一个参数，示例：[评审平台]验证码为{1}，请于10分钟内使用。
-define('SMS_TPLID_SCODE', 1234);
+define('SMS_TPLID_SCODE', 450691);
 //短信通知模板ID，需要三个参数，示例：[评审平台]您的课题：[{1}]已{2}，请打开https://example.com/kase/#/pannel/article/{3}查看。
-define('SMS_TPLID_NOTICE', 5678);
-//短信登录模板ID，需要1个参数，也就是token，示例：[评审平台]您正在登录评审平台，点此打开https://ch34k.xyz/kase/#/token/{1}
-define('SMS_TPLID_URL', 6666);
+define('SMS_TPLID_NOTICE', 450692);
+//短信登录模板ID，需要1个参数，也就是token，示例：[评审平台]您正在登录评审平台，点此打开https://example.com/kase/#/token/{1}
+define('SMS_TPLID_URL', 450690);
 
 //数据库相关
 //数据库主机
