@@ -20,7 +20,7 @@ define('CORS', '${CONFIG_CORS}');
 
 //短信相关，使用腾讯云SMS，暂时未可用
 //短信有效期，单位：秒
-define('SMS_PERIOD', 600);
+define('SMS_PERIOD', 300);
 //SDK AppID
 define('SMS_APPID', 9700);
 //App Key
