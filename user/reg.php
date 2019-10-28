@@ -11,7 +11,8 @@ try {
     require_once __DIR__ . '/../include/jwt.php';
     require_once __DIR__ . '/../include/sms.php';
     header('Content-type: application/json');
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !key_exists('u', $_POST) ||
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' ||
+        !key_exists('u', $_POST) ||
         !preg_match("/^1[3|5|7|8]\d{9}$/AD", $_POST['u'])) //匹配手机号
         //bad request
         throw new KBException(-100);

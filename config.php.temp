@@ -31,6 +31,8 @@ define('SMS_TPLID_SCODE', 450691);
 define('SMS_TPLID_NOTICE', 450692);
 //短信登录模板ID，需要1个参数，也就是token，示例：[评审平台]您正在登录评审平台，点此打开https://example.com/kase/#/token/{1}
 define('SMS_TPLID_URL', 450690);
+//短信HMAC签名密钥，自定
+define('SMS_SECRET', '${CONFIG_SMSSECRET}');
 
 //数据库相关
 //数据库主机
