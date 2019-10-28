@@ -16,14 +16,15 @@ use Qcloud\Sms\SmsSingleSender;
 /**
  * @param string $scode
  * @param string $phone
+ * @param int $tplid
  * @throws KBException
  * 短信验证码
  * @author hzy
  */
-function scode(string $scode, string $phone)
+function scode(string $scode, string $phone, int $tplid)
 {
     $sender = new SmsSingleSender(SMS_APPID, SMS_APPKEY);
-    $res = $sender->sendWithParam('86', $phone, SMS_TPLID_SCODE, [$scode]);
+    $res = $sender->sendWithParam('86', $phone, $tplid, [$scode]);
     $rsp = json_decode($res, true);
     if ($rsp['result'] !== 0)
         throw new KBException(-20, $res);
@@ -58,7 +59,7 @@ function snotice(bool $is_pass, int $cid, string $name, string $phone)
 function sreg(string $phone)
 {
     $scode = sprintf("%06d", mt_rand(0, 999999));
-    scode($scode, $phone);
+    scode($scode, $phone, SMS_TPLID_REGISTE);
     setcookie(
         'sms_token',
         $enc = sms_encode($scode, $phone, 'register'),
@@ -76,7 +77,7 @@ function sreg(string $phone)
 function slogin(string $phone)
 {
     $scode = sprintf("%06d", mt_rand(0, 999999));
-    scode($scode, $phone);
+    scode($scode, $phone, SMS_TPLID_LOGIN);
     setcookie(
         'sms_token',
         $enc = sms_encode($scode, $phone, 'login'),
