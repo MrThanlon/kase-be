@@ -23,7 +23,7 @@ try {
     //不存在，注册
 
     //插入
-    $db->query("INSERT INTO `user` (`username`,`tel`,`type`) VALUES ('{$u}',{$u},1)");
+    $db->query("INSERT INTO `user` (`username`,`tel`,`type`) VALUES ('{$u}',{$u},0)");
     if ($db->sqlstate !== '00000')
         throw new KBException(-60);
     //短信发送
