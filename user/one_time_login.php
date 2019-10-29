@@ -44,7 +44,7 @@ try {
     $jwt = [
         'u' => $_POST['u'],
         'uid' => $uid,
-        'type' => $type,
+        'type' => 1,
         'version' => $version,
         'expire' => time() + EXPIRE,
         'born' => time()
