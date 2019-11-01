@@ -1192,6 +1192,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     data: [
       	{
           	u: String, //用户名
+          	pid: Number, //隶属于的项目，未分配时没有这个字段
           	stat: Number, //0. 已提交打分表，1.未提交
           	time: String //提交时间
         }

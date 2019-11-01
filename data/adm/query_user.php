@@ -27,6 +27,15 @@ try {
         $pre[$cur[0]] = $cur[1];
         return $pre;
     }, []);
+
+    // 拉取uid-pid
+    $ans = $db->query("SELECT `uid`,`pid` FROM `user-project`");
+    $p = $ans->fetch_all();
+    $pids = array_reduce($p, function ($pre, $cur) {
+        $pre[(int)$cur[0]] = (int)$cur[1];
+        return $pre;
+    }, []);
+
     // 拉取tables
     $ans = $db->query("SELECT `uid`,`time` FROM `tables` WHERE `uid` IN (SELECT `uid` FROM `user` WHERE `type`=2)");
     $t = $ans->fetch_all();
@@ -36,7 +45,7 @@ try {
     });
     // 合成数据
     foreach ($u as &$val) {
-        $uid = $val[0];
+        $uid = (int)$val[0];
         $username = $val[1];
         $stat = key_exists($uid, $tables) ? true : false;
 
@@ -46,6 +55,9 @@ try {
         ];
         if ($stat) {
             $val['time'] = $tables[$uid];
+        }
+        if (key_exists($uid, $pids)) {
+            $val['pid'] = $pids[$uid];
         }
     }
 
