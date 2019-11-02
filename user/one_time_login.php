@@ -14,7 +14,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST' ||
         !key_exists('token', $_POST) ||
         !key_exists('u', $_POST) ||
-        !key_exists('password', $_POST) ||
+        //!key_exists('password', $_POST) ||
         !preg_match("/^[0-9]\d{5}$/AD", $_POST['token']) || //匹配6位短码
         !preg_match("/^1[3|5|7|8]\d{9}$/AD", $_POST['u'])) //匹配手机号
         //bad request
@@ -26,20 +26,26 @@ try {
     sms_check($_COOKIE['sms_token'], $_POST['u'], $_POST['token'], 'login');
 
     //提取密码
-    $password = $db->escape_string($_POST['password']);
-    $hash = hash('sha256', $password . HASH_SALT);
+    $hash = false;
+    if (key_exists('password', $_POST)) {
+        $password = $db->escape_string($_POST['password']);
+        $hash = hash('sha256', $password . HASH_SALT);
+    }
 
     //查询用户信息
     $ans = $db->query("SELECT `uid`,`version`,`type` FROM `user` WHERE `username`='{$_POST['u']}' AND (`type`=1 OR `type`=0) LIMIT 1");
     if ($ans->num_rows === 0)
-        throw new KBException(-200,"System error, failed to query user");//讲道理不应该
+        throw new KBException(-200, "System error, failed to query user");//讲道理不应该
     $res = $ans->fetch_row();
     $uid = (int)$res[0];
     $version = (int)$res[1];
     $type = (int)$res[2];
 
     //更新last_login
-    $db->query("UPDATE `user` SET `last_login`=CURRENT_TIMESTAMP,`type`=1,`password`='{$hash}' WHERE `uid`={$uid} LIMIT 1");
+    $db->query("UPDATE `user` SET `last_login`=CURRENT_TIMESTAMP,`type`=1" .
+        $hash === false ? '' : ",`password`='{$hash}'" .
+        " WHERE `uid`={$uid} LIMIT 1"
+    );
     //登录成功
     $jwt = [
         'u' => $_POST['u'],
