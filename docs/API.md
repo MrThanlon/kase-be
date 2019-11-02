@@ -544,6 +544,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 {
     status_code: Number,
     msg: String,
+  	project: String, //项目名称
     data: [
         {
         	name: String, //课题名称

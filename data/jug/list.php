@@ -19,6 +19,13 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 2)
         throw new KBException(-100);
+    //拉取项目名称
+    $ans = $db->query("SELECT `name` FROM `project` WHERE
+                                   `pid`=(SELECT `pid` FROM `user-project` WHERE `uid`={$jwt['uid']} LIMIT 1)");
+    $project = 0;
+    if ($ans->num_rows !== 0)
+        $project = $ans->fetch_row()[0];
+
     //拉取所有gid
     $ans = $db->query("SELECT `gid` FROM `user-group` WHERE `uid`={$jwt['uid']}");
     $res = $ans->fetch_all();
@@ -27,6 +34,7 @@ try {
         echo json_encode([
             'status' => 0,
             'msg' => '',
+            'project' => $project,
             'data' => []
         ]);
         exit;
@@ -69,6 +77,7 @@ try {
     echo json_encode([
         'status' => 0,
         'msg' => '',
+        'project' => $project,
         'data' => $data
     ]);
 } catch (KBException $e) {
