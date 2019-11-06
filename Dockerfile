@@ -7,8 +7,8 @@ RUN set -xe;\
     cp nginx.conf /etc/nginx/conf.d/;\
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories;\
     apk add git;\
-    curl -o /usr/local/bin/composer https://getcomposer.org/download/1.9.0/composer.phar;\
-    chmod +x /usr/local/bin/composer;\
+    composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/;\
+    composer config repo.packagist composer https://mirrors.aliyun.com/composer/;\
     composer install -v;\
     mkdir -p modules/pdf.js;\
     cd modules/pdf.js;\
