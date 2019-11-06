@@ -138,7 +138,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     param: {
       u: Number, //手机号
     	token: String, //验证码
-      password: String //新密码
+      password: String //新密码，弱不修改则不使用此字段
     }
 }
 ```
@@ -549,10 +549,8 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
         {
         	name: String, //课题名称
         	cid: Number, //课题唯一编号
-        	applicant: String, //申请人
           status: Number, //状态
-          zip: Boolean, //是否上传附件
-          time: String //提交时间
+          zip: Boolean //是否上传附件
         },
         ...
     ]

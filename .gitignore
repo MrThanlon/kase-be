@@ -4,6 +4,5 @@ vendor
 aspnet_client
 .idea
 .DS_Store
-modules/*
 storage/*
-modules/pdf.js
+modules/

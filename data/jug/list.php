@@ -64,7 +64,7 @@ try {
         $WHERE_str .= "`cid`={$key} OR ";
     }
     $WHERE_str = substr($WHERE_str, 0, -4);
-    $ans = $db->query("SELECT `name`,`cid`,`applicant`,`status`,`pid`,`zip_name` FROM `content` WHERE {$WHERE_str}");
+    $ans = $db->query("SELECT `name`,`cid`,`status`,`pdf_name`,`zip_name` FROM `content` WHERE {$WHERE_str}");
     for ($i = $ans->num_rows; $i > 0; $i--) {
         $d = $ans->fetch_assoc();
         $d['cid'] = (int)$d['cid'];
