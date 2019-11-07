@@ -7,7 +7,7 @@ RUN set -xe;\
     cp nginx.conf /etc/nginx/conf.d/;\
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories;\
     apk add git;\
-    wget https://mirrors.aliyun.com/composer/composer.phar -P /bin/composer;\
+    curl -L -o composer https://mirrors.aliyun.com/composer/composer.phar;\
     chmod +x /bin/composer;\
     composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/;\
     composer config repo.packagist composer https://mirrors.aliyun.com/composer/;\
