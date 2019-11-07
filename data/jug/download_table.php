@@ -37,10 +37,10 @@ try {
     $path = FILE_DIR . "/{$pid}table";
     if (!is_file($path) || !is_readable($path))
         //无法读取文件
-        throw new KBException(-110);
+        throw new KBException(-110, $path);
     $f = fopen($path, 'rb');
     if ($f === false)
-        throw new KBException(-110);
+        throw new KBException(-110, $path);
     //文件类型是二进制流，设置为utf8编码（支持中文文件名称）
     header('Content-type:application/octet-stream; charset=utf-8');
     header("Content-Transfer-Encoding: binary");

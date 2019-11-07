@@ -48,7 +48,7 @@ try {
         throw new KBException(-104);
     if (!is_writable(FILE_DIR))
         throw new KBException(-105);
-    if (!move_uploaded_file($_FILES['file']['tmp_name'], FILE_DIR . "/table"))
+    if (!move_uploaded_file($_FILES['file']['tmp_name'], FILE_DIR . "/{$pid}table"))
         throw new KBException(-106);
     echo json_encode([
         'status' => 0,

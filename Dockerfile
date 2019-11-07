@@ -17,7 +17,8 @@ RUN set -xe;\
     curl -L -o pdf.js.zip https://github.com/mozilla/pdf.js/releases/download/v2.2.228/pdfjs-2.2.228-dist.zip;\
     unzip pdf.js.zip;\
     rm pdf.js.zip;\
-    sed -i "1773,1775d" web/viewer.js;\
+    sed -i -e "1773,1775d" -e "13346,13350d" -e "12895,12911d" web/viewer.js;\
+    sed -i -e "118,120d" -e "221,223d" web/viewer.html;\
     cd /;\
     mv /build /app;\
     mkdir /storage;\
