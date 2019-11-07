@@ -1,4 +1,4 @@
-FROM registry.stuhome.com/devops/dockerepo/php-fpm:7-1.0.1
+FROM registry.stuhome.com/devops/dockerepo/php-fpm:7.2-1.0.1
 
 COPY ./ /build/
 
