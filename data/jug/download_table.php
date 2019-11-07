@@ -26,7 +26,7 @@ try {
                                         `pid`=(SELECT `pid` FROM `user-project` WHERE `uid`={$jwt['uid']} LIMIT 1) LIMIT 1");
     if ($ans->num_rows === 0)
         throw new KBException(-100, "Judger not assign to project");
-    $res = $ans->fetch_row()[0];
+    $res = $ans->fetch_row();
     $pid = $res[0];
     $name = $res[1];
 
