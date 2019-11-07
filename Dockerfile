@@ -7,9 +7,12 @@ RUN set -xe;\
     cp nginx.conf /etc/nginx/conf.d/;\
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories;\
     apk add git;\
-    /bin/composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/;\
-    /bin/composer config repo.packagist composer https://mirrors.aliyun.com/composer/;\
-    /bin/composer install -v;\
+    wget https://mirrors.aliyun.com/composer/composer.phar -P composer-setup.php;\
+    php composer-setup.php --install-dir=/bin --filename=composer; \
+    php -r "unlink('composer-setup.php');";\
+    composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/;\
+    composer config repo.packagist composer https://mirrors.aliyun.com/composer/;\
+    composer install -v;\
     mkdir -p modules/pdf.js;\
     cd modules/pdf.js;\
     curl -L -o pdf.js.zip https://github.com/mozilla/pdf.js/releases/download/v2.2.228/pdfjs-2.2.228-dist.zip;\
