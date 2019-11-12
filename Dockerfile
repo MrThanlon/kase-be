@@ -4,20 +4,8 @@ COPY ./ /build/
 
 RUN set -xe;\
     cd /build;\
+    ./config.sh;\
     cp nginx.conf /etc/nginx/conf.d/;\
-    case $env in
-        production)
-            echo $MASTER_CONFIG > config.php
-            ;;
-
-        staging)
-            echo $STAGING_CONFIG > config.php
-            ;;
-
-        *)
-            logerror Invalid environment: $env
-            ;;
-    esac
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories;\
     apk add git;\
     composer config repo.packagist composer https://mirrors.aliyun.com/composer/;\
