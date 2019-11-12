@@ -15,4 +15,4 @@ else
     fi
 fi
 echo $ENV
-#docker build -t $DOCKER_BUILD_TAG --build-arg "ENV=$ENV" .
+docker build -t $DOCKER_BUILD_TAG --build-arg "ENV=$ENV" .
