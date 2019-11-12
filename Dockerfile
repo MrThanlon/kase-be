@@ -4,6 +4,7 @@ COPY ./ /build/
 
 RUN set -xe;\
     cd /build;\
+    chmod +x config.sh;\
     ./config.sh;\
     cp nginx.conf /etc/nginx/conf.d/;\
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories;\
