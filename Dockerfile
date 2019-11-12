@@ -3,12 +3,15 @@ FROM registry.stuhome.com/devops/dockerepo/php-fpm:7.2-1.0.1
 COPY ./ /build/
 
 ARG ENV=dev
+ARG TOKEN=1
 
 RUN set -xe;\
     cd /build;\
     cp nginx.conf /etc/nginx/conf.d/;\
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories;\
-    apk add git;\
+    apk update;\
+    apk add git curl;\
+    curl -H "AUTHORIZATION:Bearer $TOKEN" -o config.php http://config.stuhome.com/$ENV/kase-be/config.php;\
     composer config repo.packagist composer https://mirrors.aliyun.com/composer/;\
     composer install -v;\
     mkdir -p modules/pdf.js;\
@@ -21,5 +24,5 @@ RUN set -xe;\
     cd /;\
     mv /build /app;\
     mkdir /storage;\
-    apk del git;\
+    apk del git curl;\
     chmod 0777 /storage
