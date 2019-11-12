@@ -6,3 +6,5 @@ aspnet_client
 .DS_Store
 storage/*
 modules/
+config.master.php
+config.staging.php
