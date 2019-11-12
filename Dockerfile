@@ -22,6 +22,6 @@ RUN set -xe;\
     mv /build /app;\
     mkdir /storage;\
     apk del git;\
-    chmod 0777 /storage
+    chmod 0777 /storage;\
     starconf_set_entry remote http://config.stuhome.com/$ENV/kase-be/config.json;\
     starconf_configure_root add /app
