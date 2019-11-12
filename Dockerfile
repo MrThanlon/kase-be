@@ -2,10 +2,10 @@ FROM registry.stuhome.com/devops/dockerepo/php-fpm:7.2-1.0.1
 
 COPY ./ /build/
 
+ARG ENV=dev
+
 RUN set -xe;\
     cd /build;\
-    chmod +x config.sh;\
-    ./config.sh;\
     cp nginx.conf /etc/nginx/conf.d/;\
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories;\
     apk add git;\
@@ -23,3 +23,5 @@ RUN set -xe;\
     mkdir /storage;\
     apk del git;\
     chmod 0777 /storage
+    starconf_set_entry remote http://config.stuhome.com/$ENV/kase-be/config.json;\
+    starconf_configure_root add /app

@@ -100,6 +100,7 @@ try {
     }
     //启动文件下载
     $writer = new Xls($excel);
+    header("Access-Control-Expose-Headers:Content-Disposition");
     header('Content-Type: application/vnd.ms-excel');
     header("Content-Disposition: attachment; filename=\"{$name}.xls\"");
     $writer->save("php://output");
