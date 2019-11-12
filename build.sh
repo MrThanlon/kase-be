@@ -1,18 +1,18 @@
 #!/bin/sh
 set -e
-sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
-apk add git
-ENV=$(git branch --show-current)
-if [ $ENV = "master" ]
+#sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
+#apk add git
+ENV=$CI_COMMIT_REF_NAME
+if [ "$ENV" = "master" ]
 then
-    $ENV="production"
+    ENV="production"
 else
-    if [ $ENV = "staging" ]
+    if [ "$ENV" = "staging" ]
     then
-        $ENV="staging"
+        ENV="staging"
     else
         logerror "Failed, unknow branch: $ENV"
     fi
 fi
 echo $ENV
-docker build -t $DOCKER_BUILD_TAG --build-arg "ENV=$ENV" .
+#docker build -t $DOCKER_BUILD_TAG --build-arg "ENV=$ENV" .
