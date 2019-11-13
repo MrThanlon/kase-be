@@ -23,7 +23,7 @@ try {
         throw new KBException(-12);
 
     //验证码校验
-    sms_check($_COOKIE['sms_token'], $_POST['u'], $_POST['token'], 'login');
+    sms_check($_COOKIE['sms_token'], $_POST['u'], $_POST['token']);
 
     //提取密码
     $hash = false;

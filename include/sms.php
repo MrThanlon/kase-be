@@ -114,11 +114,10 @@ function sms_encode(string $scode, string $phone, string $use)
  * @param string $token
  * @param string $scode
  * @param string $phone
- * @param string $use
  * @throws KBException
  * 短信验证码校验
  */
-function sms_check(string $token, string $phone, string $scode, string $use)
+function sms_check(string $token, string $phone, string $scode)
 {
     //截取数据和签名
     $hash = substr($token, -64);
@@ -134,9 +133,7 @@ function sms_check(string $token, string $phone, string $scode, string $use)
     if ($data === null)
         throw new KBException(-200, "Failed to parse sms token data from cookie");
     //校验
-    $t = $data['born'];
-    $period = $data['period'];
-    if ($data['scode'] !== hash_hmac('sha256', $scode . $phone . $t . $period . $use, SMS_SECRET) ||
+    if ($data['scode'] !== hash_hmac('sha256', $scode . $phone . $data['born'] . $data['period'] . $data['use'], SMS_SECRET) ||
         $data['born'] + $data['period'] <= time() ||
         $data['phone'] !== $phone)
         throw new KBException(-12);
