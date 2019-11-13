@@ -26,7 +26,6 @@ try {
     sms_check($_COOKIE['sms_token'], $_POST['u'], $_POST['token']);
 
     //提取密码
-    $hash = false;
     if (key_exists('password', $_POST)) {
         $password = $db->escape_string($_POST['password']);
         $hash = hash('sha256', $password . HASH_SALT);
@@ -42,10 +41,13 @@ try {
     $type = (int)$res[2];
 
     //更新last_login
-    $db->query("UPDATE `user` SET `last_login`=CURRENT_TIMESTAMP,`type`=1" .
-        $hash === false ? '' : ",`password`='{$hash}'" .
-        " WHERE `uid`={$uid} LIMIT 1"
-    );
+    if (isset($hash)) {
+        $db->query("UPDATE `user` SET `last_login`=CURRENT_TIMESTAMP,`type`=1,`password`='{$hash}' WHERE `uid`={$uid} LIMIT 1");
+    } else {
+        $db->query("UPDATE `user` SET `last_login`=CURRENT_TIMESTAMP,`type`=1 WHERE `uid`={$uid} LIMIT 1");
+    }
+    if ($db->sqlstate !== '00000')
+        throw new KBException(-60);
     //登录成功
     $jwt = [
         'u' => $_POST['u'],

@@ -24,7 +24,7 @@ try {
             throw new KBException(-1);
         $res = $ans->fetch_row();
         //验证密码
-        if ($res[0] !== hash('sha256', $_POST['p'] . HASH_SALT))
+        if ($res[0] !== hash('sha256', $db->escape_string($_POST['p']) . HASH_SALT))
             throw new KBException(-1);
         //登录成功
         //更新登录日期
@@ -43,7 +43,7 @@ try {
         if ($ans->num_rows === 0)
             throw new KBException(-1, "no user");
         $res = $ans->fetch_all()[0];
-        if ($res[0] !== hash('sha256', $_POST['p'] . HASH_SALT))
+        if ($res[0] !== hash('sha256', $db->escape_string($_POST['p']) . HASH_SALT))
             throw new KBException(-1, "wrong password");
         //登录成功
         //更新登录日期
@@ -56,7 +56,7 @@ try {
     }
 
 } catch (KBException $e) {
-    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage() . ":" . $e->getFile() . ":" . $e->getLine()]);
+    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
 } catch (Exception $e) {
     echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
 }
