@@ -12,6 +12,7 @@ RUN set -xe;\
     apk update;\
     apk add git curl;\
     curl -H "AUTHORIZATION:Bearer $TOKEN" -o config.php http://config.stuhome.com/$ENV/kase-be/config.php;\
+    cat config.php;\
     composer config repo.packagist composer https://mirrors.aliyun.com/composer/;\
     composer install -v;\
     mkdir -p modules/pdf.js;\

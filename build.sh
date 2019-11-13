@@ -20,5 +20,4 @@ else
     fi
 fi
 echo $ENV
-echo $CONFIG > config.php
 docker build -t $DOCKER_BUILD_TAG --build-arg "ENV=$ENV" --build-arg "TOKEN=$TOKEN" .
