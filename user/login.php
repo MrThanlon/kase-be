@@ -56,7 +56,7 @@ try {
     }
 
 } catch (KBException $e) {
-    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);
+    echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage() . ":" . $e->getFile() . ":" . $e->getLine()]);
 } catch (Exception $e) {
     echo json_encode(['status' => -200, 'msg' => 'Unknow error']);
 }
