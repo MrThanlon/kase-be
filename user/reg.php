@@ -26,7 +26,7 @@ try {
     //插入
     $db->query("INSERT INTO `user` (`username`,`tel`,`type`) VALUES ('{$u}',{$u},0)");
     if ($db->sqlstate !== '00000')
-        throw new KBException(-60);
+        throw new KBException(-60, $db->sqlstate);
     //短信发送
     sreg($u);
     //响应
