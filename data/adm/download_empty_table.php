@@ -20,18 +20,18 @@ try {
     if (!key_exists('token', $_COOKIE))
         throw new KBException(-10);
     $jwt = jwt_decode($_COOKIE['token']);
-    if ($jwt['type'] !== 3 || !key_exists('pid', $_GET) ||
+    if ($jwt['type'] !== 3 ||
+        !key_exists('pid', $_GET) ||
         !preg_match("/^[1-9]\d*$/AD", $_GET['pid'])) //保证纯数字
         throw new KBException(-100);
     $pid = (int)$_GET['pid'];
     //检查pid，拉取名称和总分
-    $ans = $db->query("SELECT `total`,`total_only`,`name` FROM `project` WHERE `pid`={$pid}");
+    $ans = $db->query("SELECT `total_only`,`name` FROM `project` WHERE `pid`={$pid}");
     if ($ans->num_rows === 0)
         throw new KBException(-101);
     $res = $ans->fetch_row();
-    $total = (int)$res[0];
-    $total_only = $res[1] === '1' ? true : false;
-    $name = $res[2];
+    $total_only = $res[0] === '1' ? true : false;
+    $name = $res[1];
     //拉取question
     $ans = $db->query("SELECT `name`,`comment`,`pqid`,`max` FROM `question` WHERE `pid`={$pid} ORDER BY `pqid`");
     $num_question = $ans->num_rows;

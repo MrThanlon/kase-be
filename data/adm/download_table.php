@@ -23,10 +23,9 @@ try {
         throw new KBException(-41);
     $res = $ans->fetch_row();
     $name = $u . "-" . $res[0];
-
+    $name = urlencode($name);
     //清除缓冲区
     ob_clean();
-
     //文件下载
     $path = FILE_DIR . "/{$res[1]}t";
     if (!(is_file($path) && is_readable($path)))
@@ -43,7 +42,7 @@ try {
     //文件大小
     header("Content-Length: " . filesize($path));
     //触发浏览器文件下载功能，讲道理文件名应该urlencode，然而并不是
-    header("Content-Disposition:attachment;filename=\"{$name}\"");
+    header("Content-Disposition:attachment;filename*=UTF-8''\"{$name}\"");
     //循环读取文件内容，并输出
     while (!feof($f)) {
         //从文件指针 handle 读取最多 length 个字节（每次输出10k）
@@ -51,7 +50,6 @@ try {
     }
     //关闭文件流
     fclose($f);
-
 
 } catch (KBException $e) {
     //echo json_encode(['status' => $e->getCode(), 'msg' => $e->getMessage()]);

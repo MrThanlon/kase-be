@@ -28,11 +28,13 @@ try {
         throw new KBException(-101);
     $data = [];
     //拉取
-    $ans = $db->query("SELECT `name`,`cid`,`applicant`,`status`,`time` FROM `content` WHERE `pid`={$pid}");
+    $ans = $db->query("SELECT `name`,`cid`,`applicant`,`status`,`time`,`pdf_name` FROM `content` WHERE `pid`={$pid}");
     for ($i = $ans->num_rows; $i > 0; $i--) {
         $d = $ans->fetch_assoc();
         $d['cid'] = (int)$d['cid'];
         $d['status'] = (int)$d['status'];
+        $d['pdf'] = $d['pdf_name'] ? true : false;
+        unset($d['pdf_name']);
         $data[] = $d;
     }
     echo json_encode([

@@ -21,7 +21,7 @@ try {
     if (!key_exists('qid', $_POST) ||
         !preg_match("/^[1-9]\d*$/AD", $_POST['qid']))
         throw new KBException(-100);
-    $qid = $_POST['qid'];
+    $qid = (int)$_POST['qid'];
     $ans = $db->query("SELECT 1 FROM `question` WHERE `qid`={$qid} LIMIT 1");
     if ($ans->num_rows === 0)
         throw new KBException(-114);
