@@ -80,7 +80,7 @@ try {
     if ($f === false)
         throw new KBException(-110);
     //文件类型是二进制流，设置为utf8编码（支持中文文件名称）
-    header("Access-Control-Expose-Headers:Content-Disposition");
+    header("Access-Control-Expose-Headers: Content-Disposition");
     header('Content-type:application/octet-stream; charset=utf-8');
     header("Content-Transfer-Encoding: binary");
     header("Accept-Ranges: bytes");

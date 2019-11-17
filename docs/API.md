@@ -723,7 +723,9 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     param: {
         name: String, //项目名称
       	start: Number, //开始时间，unix时间戳
-      	end: Number //结束时间，unix时间戳
+      	end: Number, //结束时间，unix时间戳
+      	total: Number, //总分
+      	total_only: Boolean //是否允许仅总分
     }
 }
 ```
@@ -751,7 +753,9 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
   	data: {
         name: String, //项目名称
         start: Number, //开始时间，unix时间戳
-      	end: Number //结束时间，unix时间戳
+      	end: Number, //结束时间，unix时间戳
+      	total: Number, //总分
+      	total_only: Boolean //是否允许仅总分
     }
 }
 ```
@@ -768,7 +772,9 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
         pid: Number, //项目id
         name: String, //项目名称
         start: Number, //开始时间，unix时间戳
-      	end: Number //结束时间，unix时间戳
+      	end: Number, //结束时间，unix时间戳
+      	total: Number, //总分
+      	total_only: Boolean //是否允许仅总分
     }
 }
 ```
