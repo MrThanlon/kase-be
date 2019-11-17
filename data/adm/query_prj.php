@@ -20,7 +20,7 @@ try {
         throw new KBException(-100);
 
     $pid = (int)$_POST['pid'];
-    $ans = $db->query("SELECT `name`,UNIX_TIMESTAMP(start),UNIX_TIMESTAMP(end) FROM `project` WHERE `pid`={$pid} LIMIT 1");
+    $ans = $db->query("SELECT `name`,UNIX_TIMESTAMP(start),UNIX_TIMESTAMP(end),`total_only` FROM `project` WHERE `pid`={$pid} LIMIT 1");
     if ($ans->num_rows === 0)
         throw new KBException(-101);
 
@@ -28,7 +28,8 @@ try {
     $data = [
         'name' => $res[0],
         'start' => (int)$res[1],
-        'end' => (int)$res[2]
+        'end' => (int)$res[2],
+        'total_only' => $res[3] === '1' ? true : false
     ];
     echo json_encode(['status' => 0, 'msg' => '', 'data' => $data]);
 
