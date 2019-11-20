@@ -101,10 +101,12 @@ try {
         $excel->getActiveSheet()->setCellValue("{$l}2", "{$val[0]}（{$val[3]}分）");
         $excel->getActiveSheet()->setCellValue("{$l}3", $val[1]);
     }
+    //文件名编码
+    $nameUrlencode = urlencode($name);
     //启动文件下载
     $writer = new Xls($excel);
-    header('Content-Type: application/vnd.ms-excel');
-    header("Content-Disposition: attachment; filename=\"{$name}.xls\"");
+    header('Content-Type: application/vnd.ms-excel; charset=utf-8');
+    header("Content-Disposition: attachment; filename=\"{$name}.xls\"; filename*=UTF-8''{$nameUrlencode}");
     $writer->save("php://output");
 
 } catch (KBException $e) {
