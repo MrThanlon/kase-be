@@ -12,6 +12,7 @@
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use \PhpOffice\PhpSpreadsheet\Style;
 
 try {
     require_once __DIR__ . '/../../include/jwt.php';
@@ -85,11 +86,21 @@ try {
         $excel->getActiveSheet()->setCellValue('A' . $current_row, $key + 1); //序号
         $excel->getActiveSheet()->setCellValue('B' . $current_row, $val[0]); //课题
         //超链接
-        // FIXME: 链接地址可能要修改
         $excel->getActiveSheet()
             ->getCell('B' . $current_row)
             ->getHyperlink()
             ->setUrl(FRONTEND . '#/judger/' . $val[1]);
+        // 蓝色
+        $excel->getActiveSheet()
+            ->getStyle('B'.$current_row)
+            ->getFont()
+            ->getColor()
+            ->setARGB(Style\Color::COLOR_BLUE);
+        // 下划线
+        $excel->getActiveSheet()
+            ->getStyle('B'.$current_row)
+            ->getFont()
+            ->setUnderline(true);
         //公式
         $excel->getActiveSheet()->setCellValue(
             $letter . $current_row, "=SUM(C{$current_row}:{$rletter}{$current_row})"
