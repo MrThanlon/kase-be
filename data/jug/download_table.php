@@ -106,7 +106,7 @@ try {
     //启动文件下载
     $writer = new Xls($excel);
     header('Content-Type: application/vnd.ms-excel; charset=utf-8');
-    header("Content-Disposition: attachment; filename=\"{$name}.xls\"; filename*=UTF-8''{$nameUrlencode}");
+    header("Content-Disposition: attachment; filename=\"{$name}.xls\"; filename*=UTF-8''{$nameUrlencode}.xls");
     $writer->save("php://output");
 
 } catch (KBException $e) {
