@@ -89,7 +89,7 @@ try {
         $excel->getActiveSheet()
             ->getCell('B' . $current_row)
             ->getHyperlink()
-            ->setUrl('https://' . DOMAIN . PATH . '#/judger/' . $val[1]);
+            ->setUrl(FRONTEND . '#/judger/' . $val[1]);
         //公式
         $excel->getActiveSheet()->setCellValue(
             $letter . $current_row, "=SUM(C{$current_row}:{$rletter}{$current_row})"
