@@ -76,6 +76,8 @@ try {
     $excel->getActiveSheet()->mergeCells("{$letter}2:{$letter}3");
     //设置指定单元格数据
     $excel->getActiveSheet()->setCellValue('A1', $name);
+    //加粗
+    $excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
     $excel->getActiveSheet()->setCellValue('A2', "序号");
     $excel->getActiveSheet()->setCellValue('B2', "课题名称");
     $excel->getActiveSheet()->setCellValue("{$letter}2", $total_only ?"合计总分\r（可只打总分）":"合计总分\r（不可只打总分）");
