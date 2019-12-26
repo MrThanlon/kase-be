@@ -22,13 +22,13 @@ try {
         throw new KBException(-100);
     $pid = (int)$_POST['pid'];
     //拉取pid
-    $ans = $db->query("SELECT `total`,`total_only` FROM `project` WHERE `pid`={$pid}");
+    $ans = $db->query("SELECT `total_only` FROM `project` WHERE `pid`={$pid}");
     if ($ans->num_rows === 0)
         throw new KBException(-101);
     $res = $ans->fetch_row();
-    $total = (int)$res[0];
-    $total_only = $res[1] === '1' ? true : false;
+    $total_only = $res[0] === '1' ? true : false;
     $data = [];
+    $total = 0;
     //拉取question
     $ans = $db->query(
         "SELECT `qid`,`pqid`,`name`,`comment`,`max` FROM `question` WHERE `pid`={$pid}");
@@ -37,11 +37,13 @@ try {
         $d['qid'] = (int)$d['qid'];
         $d['pqid'] = (int)$d['pqid'];
         $d['max'] = (int)$d['max'];
+        $total += $d['max'];
         $data[] = $d;
     }
     echo json_encode([
         'status' => 0, 'msg' => '',
-        'total' => $total, 'total_only' => $total_only,
+        'total' => $total,
+        'total_only' => $total_only,
         'data' => $data
     ]);
 } catch (KBException $e) {

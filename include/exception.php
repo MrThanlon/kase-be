@@ -35,11 +35,13 @@ class KBException extends Exception
         -200 => 'Unknow error'
     ];
 
-    public function __construct($code = -200, $message = "", Throwable $previous = null)
+    public function __construct($code = -200, $message = "", $log = "", Throwable $previous = null)
     {
         if (!$message)
             $message = KBException::$msg[$code];
-        errlog($code, "[{$this->getLine()}]{$message}");
+        if (!$log)
+            $log = "[{$this->getFile()}:{$this->getLine()}]{$message}";
+        errlog($code, $log);
         parent::__construct($message, $code, $previous);
     }
 }

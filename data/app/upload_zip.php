@@ -41,8 +41,6 @@ try {
     if ($ans->num_rows === 0)
         throw new KBException(-103);
     $res = $ans->fetch_row();
-    if ($res[0] !== null)
-        throw new KBException(-100);
     $status = (int)$res[2];
 
     // 检查时间

@@ -31,12 +31,13 @@ try {
     $name = $db->escape_string($_POST['name']);
     $start = (int)$_POST['start'];
     $end = (int)$_POST['end'];
+    $total_only = $_POST['total_only'] === 'true' ? 1 : 0;
 
     $ans = $db->query("SELECT 1 FROM `project` WHERE `pid`={$pid}");
     if ($ans->num_rows === 0)
         throw new KBException(-101);
 
-    $db->query("UPDATE `project` SET `name`='{$name}',`start`=FROM_UNIXTIME({$start}),`end`=FROM_UNIXTIME({$end}) WHERE `pid`={$pid} LIMIT 1");
+    $db->query("UPDATE `project` SET `name`='{$name}',`start`=FROM_UNIXTIME({$start}),`end`=FROM_UNIXTIME({$end}),`total_only`={$total_only} WHERE `pid`={$pid} LIMIT 1");
     if ($db->error)
         throw new KBException(-60, $db->error);
     echo json_encode(['status' => 0, 'msg' => '']);

@@ -23,10 +23,7 @@ try {
 
     //检查pid
     $pid = (int)$_POST['pid'];
-    $ans = $db->query("SELECT 1 FROM `project` WHERE
-                              `pid`={$pid} AND
-                              `start`<=CURRENT_TIMESTAMP AND
-                              `end`>=CURRENT_TIMESTAMP");
+    $ans = $db->query("SELECT 1 FROM `project` WHERE `pid`={$pid} LIMIT 1");
     if ($ans->num_rows === 0)
         throw new KBException(-101);
 
@@ -73,18 +70,18 @@ try {
                     try {
                         $parser->parseFile($path . "/" . $app . "/" . $name . "/" . $file);
                     } catch (Exception $e) {
-                        throw new KBException(-110, "Can not parse file");
+                        throw new KBException(-110, "Can not parse file,{$e->getMessage()}");
                     }
                     $applicant[$app][$name]['pdf'] = substr($file, 0, -4);
                     $pdf_sql = "'{$applicant[$app][$name]['pdf']}'";
                 } elseif (substr($file, -4) === ".zip") {
                     if (!$z2->open($path . "/" . $app . "/" . $name . "/" . $file))
-                        throw new KBException(-110, "Can not parse file");
+                        throw new KBException(-110, "Can not parse file,{$e->getMessage()}");
                     $z2->close();
                     $applicant[$app][$name]['zip'] = substr($file, 0, -4);
                     $zip_sql = "'{$applicant[$app][$name]['zip']}'";
                 } else {
-                    throw new KBException(-110, "Can not parse file");
+                    throw new KBException(-110, "Can not parse file, not pdf or zip");
                 }
             }
             $sqls[] = "('{$name}',{$pid},'{$app}',1,{$jwt['uid']},{$pdf_sql},{$zip_sql})";

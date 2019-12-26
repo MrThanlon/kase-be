@@ -24,7 +24,7 @@ try {
             throw new KBException(-1);
         $res = $ans->fetch_row();
         //验证密码
-        if ($res[0] !== hash('sha256', $_POST['p'] . HASH_SALT))
+        if ($res[0] !== hash('sha256', $db->escape_string($_POST['p']) . HASH_SALT))
             throw new KBException(-1);
         //登录成功
         //更新登录日期
@@ -41,10 +41,10 @@ try {
         $ans = $db->query(
             "SELECT `password`,`type`,`uid`,`version` FROM `user` WHERE `username` = '{$u}' LIMIT 1");
         if ($ans->num_rows === 0)
-            throw new KBException(-1);
+            throw new KBException(-1, "no user");
         $res = $ans->fetch_all()[0];
-        if ($res[0] !== hash('sha256', $_POST['p'] . HASH_SALT))
-            throw new KBException(-1);
+        if ($res[0] !== hash('sha256', $db->escape_string($_POST['p']) . HASH_SALT))
+            throw new KBException(-1, "wrong password");
         //登录成功
         //更新登录日期
         $db->query("UPDATE `user` SET `last_login`=CURRENT_TIMESTAMP WHERE `user`.`uid` = {$res[2]}");

@@ -18,13 +18,20 @@ try {
         throw new KBException(-100);
     $u = (int)$_POST['u'];
     //检查是否存在
-    $ans = $db->query("SELECT `type` FROM `user` WHERE `username`='{$u}' AND `type`=1 LIMIT 1");
-    if ($ans->num_rows !== 0)
-        throw new KBException(-40);
+    $ans = $db->query("SELECT `type` FROM `user` WHERE `username`='{$u}' LIMIT 1");
+    if ($ans->num_rows !== 0) {
+        $res = $ans->fetch_row();
+        if ($res[0] === '1')
+            throw new KBException(-40);
+    }
     //不存在，注册
 
     //插入
-    $db->query("INSERT INTO `user` (`username`,`tel`,`type`) VALUES ('{$u}',{$u},0)");
+    if (isset($res) && $res[0] === '0') {
+        $db->query("UPDATE `user` SET `username`='{$u}',`tel`={$u},`type`=0 WHERE `username`='{$u}' LIMIT 1");
+    } else {
+        $db->query("INSERT INTO `user` (`username`,`tel`,`type`) VALUES ('{$u}',{$u},0)");
+    }
     if ($db->sqlstate !== '00000')
         throw new KBException(-60);
     //短信发送

@@ -13,6 +13,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
         $_SERVER['CONTENT_TYPE'] === 'application/json') {
         // 从json解析数据
+        //FIXME: escape_string
         $postjson = file_get_contents("php://input");
         $data = json_decode($postjson, false);
     } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -20,8 +21,9 @@ try {
         $url = parse_url($_SERVER['REQUEST_URI']);
         $query = explode('&', $url['query']);
         $data = array_reduce($query, function ($pre, $cur) {
+            global $db;
             if (substr($cur, 0, 5) === "user=") {
-                $pre[] = substr($cur, 5);
+                $pre[] = $db->escape_string(urldecode(substr($cur, 5)));
                 return $pre;
             } else
                 return $pre;
@@ -80,6 +82,7 @@ try {
     if ($f === false)
         throw new KBException(-110);
     //文件类型是二进制流，设置为utf8编码（支持中文文件名称）
+    header("Access-Control-Expose-Headers: Content-Disposition");
     header('Content-type:application/octet-stream; charset=utf-8');
     header("Content-Transfer-Encoding: binary");
     header("Accept-Ranges: bytes");

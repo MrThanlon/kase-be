@@ -19,6 +19,13 @@ try {
     $jwt = jwt_decode($_COOKIE['token']);
     if ($jwt['type'] !== 2)
         throw new KBException(-100);
+    //拉取项目名称
+    $ans = $db->query("SELECT `name` FROM `project` WHERE
+                                   `pid`=(SELECT `pid` FROM `user-project` WHERE `uid`={$jwt['uid']} LIMIT 1)");
+    $project = 0;
+    if ($ans->num_rows !== 0)
+        $project = $ans->fetch_row()[0];
+
     //拉取所有gid
     $ans = $db->query("SELECT `gid` FROM `user-group` WHERE `uid`={$jwt['uid']}");
     $res = $ans->fetch_all();
@@ -27,6 +34,7 @@ try {
         echo json_encode([
             'status' => 0,
             'msg' => '',
+            'project' => $project,
             'data' => []
         ]);
         exit;
@@ -56,17 +64,20 @@ try {
         $WHERE_str .= "`cid`={$key} OR ";
     }
     $WHERE_str = substr($WHERE_str, 0, -4);
-    $ans = $db->query("SELECT `name`,`cid`,`applicant`,`status`,`pid` FROM `content` WHERE {$WHERE_str}");
+    $ans = $db->query("SELECT `name`,`cid`,`status`,`pdf_name`,`zip_name` FROM `content` WHERE {$WHERE_str}");
     for ($i = $ans->num_rows; $i > 0; $i--) {
         $d = $ans->fetch_assoc();
         $d['cid'] = (int)$d['cid'];
         $d['pid'] = (int)$d['pid'];
         $d['status'] = (int)$d['status'];
+        $d['zip'] = $d['zip_name'] ? true : false;
+        unset($d['zip_name']);
         $data[] = $d;
     }
     echo json_encode([
         'status' => 0,
         'msg' => '',
+        'project' => $project,
         'data' => $data
     ]);
 } catch (KBException $e) {

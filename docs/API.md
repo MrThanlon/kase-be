@@ -138,7 +138,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     param: {
       u: Number, //手机号
     	token: String, //验证码
-      password: String //新密码
+      password: String //新密码，弱不修改则不使用此字段
     }
 }
 ```
@@ -544,14 +544,13 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
 {
     status_code: Number,
     msg: String,
+  	project: String, //项目名称
     data: [
         {
         	name: String, //课题名称
         	cid: Number, //课题唯一编号
-        	applicant: String, //申请人
           status: Number, //状态
-          zip: Boolean, //是否上传附件
-          time: String //提交时间
+          zip: Boolean //是否上传附件
         },
         ...
     ]
@@ -724,7 +723,9 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     param: {
         name: String, //项目名称
       	start: Number, //开始时间，unix时间戳
-      	end: Number //结束时间，unix时间戳
+      	end: Number, //结束时间，unix时间戳
+      	total: Number, //总分
+      	total_only: Boolean //是否允许仅总分
     }
 }
 ```
@@ -752,7 +753,8 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
   	data: {
         name: String, //项目名称
         start: Number, //开始时间，unix时间戳
-      	end: Number //结束时间，unix时间戳
+      	end: Number, //结束时间，unix时间戳
+      	total_only: Boolean //是否允许仅总分
     }
 }
 ```
@@ -769,7 +771,8 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
         pid: Number, //项目id
         name: String, //项目名称
         start: Number, //开始时间，unix时间戳
-      	end: Number //结束时间，unix时间戳
+      	end: Number, //结束时间，unix时间戳
+      	total_only: Boolean //是否允许仅总分
     }
 }
 ```
@@ -958,7 +961,8 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
             cid: Number, //材料编号
             applicant: String, //申请人
             status: Number, //材料状态，0->未审核，1->已过审，2->审核未通过
-          	time: String //申报时间，字符串形式
+          	time: String, //申报时间，字符串形式
+          	pdf: Boolean
         },
         ...
     ]
@@ -1192,6 +1196,7 @@ token会放到响应的cookie中，键名为`token`。token为经过base64编码
     data: [
       	{
           	u: String, //用户名
+          	pid: Number, //隶属于的项目，未分配时没有这个字段
           	stat: Number, //0. 已提交打分表，1.未提交
           	time: String //提交时间
         }

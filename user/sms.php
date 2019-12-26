@@ -20,7 +20,7 @@ try {
     //检查是否存在
     $ans = $db->query("SELECT 1 FROM `user` WHERE `username`='{$u}' AND (`type`=1 OR `type`=0) LIMIT 1");
     if ($ans->num_rows === 0)
-        throw new KBException(-40);
+        throw new KBException(-30);
     //短信发送
     slogin($u);
     //响应
